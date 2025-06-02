@@ -4,7 +4,7 @@
         <button onclick="toggleMenu()" class="text-white text-2xl md:hidden">&#9776;</button>
         <a href="{{ route('datacell.dashboard') }}" class="font-bold text-white text-1xl lg:text-2xl">LMS</a>
     </div>
-    <div class="hidden md:flex space-x-10 ml-auto mr-5 text-white">
+    <div class="hidden md:flex space-x-10 ml-auto mr-5 text-white"> 
         <a href="{{ route('datacell.dashboard') }}" class="nav-item">Home</a>
         <a href="#" onclick="document.getElementById('logout-form').submit();" class="nav-item" style=" font-weight:700">Logout</a>
     </div>

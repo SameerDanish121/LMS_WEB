@@ -5,8 +5,8 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
- 
-//````````````````````DATACELL ( SAMEER )`````````````````````//
+
+//````````````````````````````````DATACELL ( SAMEER )```````````````````````````````````//
 Route::prefix('datacell')->group(function () {
     //TEMP_ENROLLMENTS
     Route::view('/approve/temp/enroll', 'DATACELL.temporary_enrollments.temp')->name('Datacell.temp.enroll');
@@ -48,9 +48,8 @@ Route::prefix('datacell')->group(function () {
     Route::view('/view/result', 'DATACELL.result.view')->name('datacell.view.result');
     //Enrollments
     Route::view('/enroll/view', 'DATACELL.enrollments.view')->name('datacell.view.enroll');
-
 });
-//````````````````````HOD ( SAMEER )``````````````````````````````````//
+//```````````````````````````````````HOD ( SAMEER )``````````````````````````````````//
 Route::prefix('hod')->group(function () {
     Route::view('/dashboard', 'HOD.hod_dashboard')->name('hod.dashboard1');
     // Management
@@ -130,7 +129,7 @@ Route::prefix('hod')->group(function () {
     Route::view('/hod/profile', 'HOD.profile')->name('hod.profile');
     Route::view('/hod/profile/edit', 'HOD.edit_profile')->name('hod.edit_profile');
 });
-//````````````````````ADMIN ( SHARJEEL )`````````````````````//~
+//````````````````````````````````ADMIN ( SHARJEEL )`````````````````````//~
 Route::prefix('admin')->group(function () {
     // ----------------------adminnnnnnnnnnnnnnnnnnnn--------------
 
@@ -261,7 +260,7 @@ Route::prefix('admin')->group(function () {
     })->name('teacher.details');
 
 });
-//````````````````````DIRECTOR ( Ali )`````````````````````//
+//`````````````````````````````````DIRECTOR ( Ali )`````````````````````//
 Route::prefix('director')->group(function () {
 Route::get('/transcript/{student_id}', [AuthController::class, 'Transcript2'])->name('Director.transcript.view');
 Route::get('/course-details', function (Request $request) {
@@ -315,6 +314,22 @@ $course = json_decode(base64_decode($studentEncoded), true);
 Route::get('/excludeddays', function () {return view('DIRECTOR.ExcludedDays');})->name('Director.excludedDays');
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

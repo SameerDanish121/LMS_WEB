@@ -1275,7 +1275,6 @@
             });
         });
     </script>
-
     @include('components.footer')
 </body>
 

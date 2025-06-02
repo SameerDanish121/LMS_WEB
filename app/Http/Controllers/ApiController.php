@@ -13,7 +13,6 @@ class ApiController extends Controller
             'api_base_url' => ApiConfig::getApiBaseUrl()
         ]);
     }
-
     public function updateApiUrl(Request $request)
     {
         $url = $request->query('url'); // Get URL from query parameter
@@ -28,5 +27,4 @@ class ApiController extends Controller
             'api_base_url' => ApiConfig::getApiBaseUrl()
         ]);
     }
-
 }
