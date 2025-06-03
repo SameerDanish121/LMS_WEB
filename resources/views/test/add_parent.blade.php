@@ -7,17 +7,11 @@
     @vite('resources/css/app.css')
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
-
 <div class="bg-white rounded-lg shadow-md w-full max-w-lg p-6 relative">
-
     <h1 class="text-2xl font-bold mb-6 text-center">Add New Parent</h1>
-
-    <!-- Loader -->
     <div id="loader" class="hidden absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50 rounded">
         <div class="loader border-4 border-blue-500 border-t-transparent rounded-full w-10 h-10 animate-spin"></div>
     </div>
-
-    <!-- Alert Box -->
     <div id="alertBox" class="hidden fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
         <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full">
             <h2 class="text-xl font-semibold text-green-600 mb-3">Parent Added Successfully!</h2>
@@ -28,9 +22,7 @@
             </button>
         </div>
     </div>
-
     <form id="parentForm" class="space-y-5">
-
         <div>
             <label for="student_id" class="block mb-1 font-medium text-gray-700">Select Student <span class="text-red-500">*</span></label>
             <select id="student_id" name="student_id" required
@@ -39,7 +31,6 @@
             </select>
             <p id="studentError" class="text-red-600 text-sm mt-1 hidden">Please select a student.</p>
         </div>
-
         <div>
             <label for="name" class="block mb-1 font-medium text-gray-700">Parent Name <span class="text-red-500">*</span></label>
             <input type="text" id="name" name="name" required
@@ -47,7 +38,6 @@
                    placeholder="Parent full name"/>
             <p id="nameError" class="text-red-600 text-sm mt-1 hidden">Please enter a name.</p>
         </div>
-
         <div>
             <label for="relation_with_student" class="block mb-1 font-medium text-gray-700">Relation with Student <span class="text-red-500">*</span></label>
             <select id="relation_with_student" name="relation_with_student" required
@@ -74,33 +64,25 @@
             <textarea id="address" name="address" rows="3" placeholder="Optional address"
                       class="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
         </div>
-
         <button type="submit"
                 class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded">
             Add Parent
         </button>
-
         <p id="formMessage" class="mt-4 text-center font-semibold"></p>
     </form>
 </div>
-
 <style>
     .loader {
         border-top-color: transparent;
         border-radius: 50%;
     }
 </style>
-
 <script>
-    
     const studentDropdown = document.getElementById('student_id');
     const loader = document.getElementById('loader');
     const alertBox = document.getElementById('alertBox');
     const alertMessage = document.getElementById('alertMessage');
     const formMessage = document.getElementById('formMessage');
-
-    // Load student data from API
-
     fetch('http://192.168.18.33:8000/api/Dropdown/AllStudentData')
         .then(res => res.json())
         .then(data => {
@@ -128,8 +110,6 @@
         const relation = document.getElementById('relation_with_student').value;
         const contact = document.getElementById('contact').value.trim();
         const address = document.getElementById('address').value.trim();
-
-        // Reset errors
         ['studentError', 'nameError', 'relationError', 'contactError'].forEach(id => {
             document.getElementById(id).classList.add('hidden');
         });
@@ -193,6 +173,5 @@
         });
     });
 </script>
-
 </body>
 </html>
