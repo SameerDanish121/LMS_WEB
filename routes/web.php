@@ -316,7 +316,10 @@ Route::get('/excludeddays', function () {return view('DIRECTOR.ExcludedDays');})
 });
 
 
+Route::view('/parent_add', 'test.add_parent')->name('parents.add');
+Route::view('/parent_view', 'test.view_parents')->name('parents.view');
 
+ 
 
 
 

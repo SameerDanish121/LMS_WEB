@@ -129,6 +129,7 @@
                         <option value="Student">Student</option>
                         <option value="Teacher">Teacher</option>
                         <option value="JuniorLecturer">Junior Lecturer</option>
+                        <option value="Parent">Parent</option>
                     </select>
                 </div>
             </div>
