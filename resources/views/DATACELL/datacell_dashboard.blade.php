@@ -598,8 +598,6 @@
                 `).join('');
             }
         }
-
-        // Initialize the activity feed
         document.addEventListener('DOMContentLoaded', function() {
             // Populate initial activity feed
             activities.forEach(activity => {
