@@ -315,8 +315,6 @@ Route::get('/excludeddays', function () {return view('DIRECTOR.ExcludedDays');})
 
 });
 
-
-
 Route::view('/parent_add', 'test.add_parent')->name('parents.add');
 Route::view('/parent_view', 'test.view_parents')->name('parents.view');
 Route::view('/re_enroll', 'test.review_re_enroll')->name('re_enroll.request');
