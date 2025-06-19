@@ -48,6 +48,14 @@ Route::prefix('datacell')->group(function () {
     Route::view('/view/result', 'DATACELL.result.view')->name('datacell.view.result');
     //Enrollments
     Route::view('/enroll/view', 'DATACELL.enrollments.view')->name('datacell.view.enroll');
+    //Degree_Program
+    Route::view('/degree_program', 'DATACELL.Degree_Program.degree_program')->name('degree_program');
+    //Parent
+    Route::view('/parent_add', 'DATACELL.Parent.add_parent')->name('parents.add');
+    Route::view('/parent_view', 'DATACELL.Parent.view_parents')->name('parents.view');
+    Route::view('/re_enroll', 'DATACELL.Parent.review_re_enroll')->name('re_enroll.request');
+    //PROMOTION SCENRAIO
+    Route::view('/promote/students', 'DATACELL.result.promote')->name('promote');
 });
 //```````````````````````````````````HOD ( SAMEER )``````````````````````````````````//
 Route::prefix('hod')->group(function () {
@@ -128,6 +136,10 @@ Route::prefix('hod')->group(function () {
     Route::view('/course/excel', 'HOD.courses.add_course_excel')->name('hod.courses.add_course_excel');
     Route::view('/hod/profile', 'HOD.profile')->name('hod.profile');
     Route::view('/hod/profile/edit', 'HOD.edit_profile')->name('hod.edit_profile');
+    //Add-Task-Limit
+    Route::view('/add_limit', 'Hod.Task_Limit.add_task_limit')->name('task_limit');
+    //Audit
+    Route::view('/audit/report', 'Hod.Audit_Report.Audit')->name('Audit_Report');
 });
 //````````````````````````````````ADMIN ( SHARJEEL )`````````````````````//~
 Route::prefix('admin')->group(function () {
@@ -262,47 +274,47 @@ Route::prefix('admin')->group(function () {
 });
 //`````````````````````````````````DIRECTOR ( Ali )`````````````````````//
 Route::prefix('director')->group(function () {
-Route::get('/transcript/{student_id}', [AuthController::class, 'Transcript2'])->name('Director.transcript.view');
-Route::get('/course-details', function (Request $request) {
- $studentEncoded = $request->query('course');
- if (!$studentEncoded) {
-    return redirect()->back()->with('error', 'Invalid course data');
-  }
-$course = json_decode(base64_decode($studentEncoded), true);
+    Route::get('/transcript/{student_id}', [AuthController::class, 'Transcript2'])->name('Director.transcript.view');
+    Route::get('/course-details', function (Request $request) {
+        $studentEncoded = $request->query('course');
+        if (!$studentEncoded) {
+            return redirect()->back()->with('error', 'Invalid course data');
+        }
+        $course = json_decode(base64_decode($studentEncoded), true);
 
- return view('DIRECTOR.course_section_info', compact('course'));
-})->name('Director.course.details');
- Route::get('/all_session', function () {
+        return view('DIRECTOR.course_section_info', compact('course'));
+    })->name('Director.course.details');
+    Route::get('/all_session', function () {
         return view('DIRECTOR.All_Sessions');
     })->name('Director.session');
-   Route::get('/all_content', function () {
+    Route::get('/all_content', function () {
         return view('DIRECTOR.CourseContent');
     })->name('Director.course_content');
-     Route::get('/all_course', function () {
+    Route::get('/all_course', function () {
         return view('DIRECTOR.Courses');
     })->name('Director.course');
-      Route::get('/all_course_allocation', function () {
+    Route::get('/all_course_allocation', function () {
         return view('DIRECTOR.Allocated_Courses');
     })->name('Director.course_allocation');
 
-       Route::get('/timetable', [AuthController::class, 'FullTimetable2'])->name('timetable.view');
+    Route::get('/timetable', [AuthController::class, 'FullTimetable2'])->name('timetable.view');
     Route::get('/full-timetable', function () {
         $timetable = session('timetable');
         return view('DIRECTOR.Timetable', compact('timetable'));
     })->name('Director.timetable');
 
-     Route::get('/all_students', function () {
+    Route::get('/all_students', function () {
         return view('DIRECTOR.All_Student');
     })->name('Director.student');
-       Route::view('/teachers', 'DIRECTOR.All_Teacher')->name('Director.teachers');
-     
-      Route::get('/all_junior', function () {
+    Route::view('/teachers', 'DIRECTOR.All_Teacher')->name('Director.teachers');
+
+    Route::get('/all_junior', function () {
         return view('DIRECTOR.All_Junior');
     })->name('Director.junior');
-     Route::get('/profile/edit', function () {
+    Route::get('/profile/edit', function () {
         return view('DIRECTOR.Edit_Profile');
     })->name('Director.edit');
-      Route::get('/student/details', function (Request $request) {
+    Route::get('/student/details', function (Request $request) {
         $studentEncoded = $request->query('student');
         if (!$studentEncoded) {
             return redirect()->back()->with('error', 'Invalid student data');
@@ -311,15 +323,12 @@ $course = json_decode(base64_decode($studentEncoded), true);
 
         return view('DIRECTOR.Trancript', compact('student'));
     })->name('Director.details');
-Route::get('/excludeddays', function () {return view('DIRECTOR.ExcludedDays');})->name('Director.excludedDays');
+    Route::get('/excludeddays', function () {
+        return view('DIRECTOR.ExcludedDays'); })->name('Director.excludedDays');
 
 });
 
-Route::view('/parent_add', 'test.add_parent')->name('parents.add');
-Route::view('/parent_view', 'test.view_parents')->name('parents.view');
-Route::view('/re_enroll', 'test.review_re_enroll')->name('re_enroll.request');
-Route::view('/degree_program', 'test.degree_program')->name('degree_program');
- 
+
 
 
 

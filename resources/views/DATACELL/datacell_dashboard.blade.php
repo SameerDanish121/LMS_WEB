@@ -473,6 +473,15 @@
                                     <span class="icon">📑</span>
                                     <span class="text">View Subject Result</span>
                                 </a>
+                                 <a href="{{ route('degree_program') }}" class="action-btn" onclick="logFunction('Full Subject Result View');">
+                                    <span class="icon">🎓</span>
+                                    <span class="text">Manage Degree Program</span>
+                                </a>
+                                 <a href="{{ route('parents.view') }}" class="action-btn" onclick="logFunction('Full Subject Result View');">
+                                    <span class="icon">👨‍👩‍👧</span>
+                                    <span class="text">Manage Parent Profile</span>
+                                </a>
+                                
                             </div>
                         </div>
                     </div>
@@ -508,6 +517,10 @@
                                     <span class="icon">👨‍💼</span>
                                     <span class="text">Add Director</span>
                                 </a>
+                                 <a href="{{ route('parents.add') }}" class="action-btn" onclick="logFunction('Add Director');">
+                                    <span class="icon">👨‍💼</span>
+                                    <span class="text">Add Parent</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -524,7 +537,7 @@
                                     <span class="icon">✅</span>
                                     <span class="text">Approve Enrollments</span>
                                 </a>
-                                <a href="#" class="action-btn" onclick="logFunction('Approve Improvements');">
+                                <a href="{{ route('re_enroll.request') }}" class="action-btn" onclick="logFunction('Approve Improvements');">
                                     <span class="icon">🔄</span>
                                     <span class="text">Approve Improvements</span>
                                 </a>

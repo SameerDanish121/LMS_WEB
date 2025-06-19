@@ -679,91 +679,98 @@
             </div>
 
             <!-- Week Progress -->
-           <div class="card animate-fade delay-300 mb-6"> <!-- Added mb-6 for bottom margin -->
-    <div class="card-header">
-        <h3 class="card-title">Academic Session Progress</h3>
-        <a href="{{ route('hod.sessions.add') }}">
-    <div class="card-icon blue cursor-pointer">📅</div>
-</a>
+            <div class="card animate-fade delay-300 mb-6"> <!-- Added mb-6 for bottom margin -->
+                <div class="card-header">
+                    <h3 class="card-title">Academic Session Progress</h3>
+                    <a href="{{ route('hod.sessions.add') }}">
+                        <div class="card-icon blue cursor-pointer">📅</div>
+                    </a>
 
-    </div>
-    <div class="flex flex-col md:flex-row items-center justify-between gap-4 p-4"> <!-- Added p-4 for inner padding -->
-        <!-- Circular Progress -->
-        <div class="relative w-24 h-24 flex-shrink-0">
-            <svg class="w-full h-full" viewBox="0 0 36 36">
-                <!-- Background circle -->
-                <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#e5e7eb" stroke-width="2"></circle>
-                <!-- Progress circle -->
-                <circle id="progress-ring-circle" cx="18" cy="18" r="15.9155" fill="none"
-                    stroke="#3b82f6" stroke-width="3" stroke-linecap="round" 
-                    stroke-dasharray="100 100" transform="rotate(-90 18 18)"></circle>
-            </svg>
-            <div class="absolute inset-0 flex flex-col items-center justify-center">
-                <span class="text-lg font-bold text-gray-800" id="week-progress-text">
-                    {{ session('current_week', 1) }}
-                </span>
-                <span class="text-xs text-gray-500">Week</span>
-            </div>
-        </div>
+                </div>
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4 p-4">
+                    <!-- Added p-4 for inner padding -->
+                    <!-- Circular Progress -->
+                    <div class="relative w-24 h-24 flex-shrink-0">
+                        <svg class="w-full h-full" viewBox="0 0 36 36">
+                            <!-- Background circle -->
+                            <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#e5e7eb"
+                                stroke-width="2"></circle>
+                            <!-- Progress circle -->
+                            <circle id="progress-ring-circle" cx="18" cy="18" r="15.9155" fill="none"
+                                stroke="#3b82f6" stroke-width="3" stroke-linecap="round" stroke-dasharray="100 100"
+                                transform="rotate(-90 18 18)"></circle>
+                        </svg>
+                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                            <span class="text-lg font-bold text-gray-800" id="week-progress-text">
+                                {{ session('current_week', 1) }}
+                            </span>
+                            <span class="text-xs text-gray-500">Week</span>
+                        </div>
+                    </div>
 
-        <!-- Session Info -->
-        <div class="flex-1 min-w-0">
-            <div class="flex justify-between items-center mb-1">
-                <span class="text-sm font-medium text-gray-700">Session:</span>
-                <span class="text-sm text-gray-600">{{ session('currentSession') }}</span>
-            </div>
-            <div class="flex justify-between items-center mb-1">
-                <span class="text-sm font-medium text-gray-700">Duration:</span>
-                <span class="text-sm text-gray-600">
-                    {{ session('startDate') }} - {{ session('endDate') }}
-                </span>
-            </div>
-            <div class="flex justify-between items-center mb-1">
-                <span class="text-sm font-medium text-gray-700">Total Weeks:</span>
-                <span class="text-sm text-gray-600">
-                    {{ str_contains(session('currentSession'), 'Fall') || str_contains(session('currentSession'), 'Spring') ? 16 : 8 }}
-                </span>
-            </div>
-        </div>
+                    <!-- Session Info -->
+                    <div class="flex-1 min-w-0">
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-medium text-gray-700">Session:</span>
+                            <span class="text-sm text-gray-600">{{ session('currentSession') }}</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-medium text-gray-700">Duration:</span>
+                            <span class="text-sm text-gray-600">
+                                {{ session('startDate') }} - {{ session('endDate') }}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm font-medium text-gray-700">Total Weeks:</span>
+                            <span class="text-sm text-gray-600">
+                                {{ str_contains(session('currentSession'), 'Fall') || str_contains(session('currentSession'), 'Spring') ? 16 : 8 }}
+                            </span>
+                        </div>
+                    </div>
 
-        <!-- Progress Bar -->
-        <div class="w-full md:w-auto md:flex-1">
-            <div class="flex justify-between text-xs text-gray-500 mb-1">
-                <span>Week 1</span>
-                <span>
-                    {{ str_contains(session('currentSession'), 'Fall') || str_contains(session('currentSession'), 'Spring') ? 16 : 8 }}
-                </span>
+                    <!-- Progress Bar -->
+                    <div class="w-full md:w-auto md:flex-1">
+                        <div class="flex justify-between text-xs text-gray-500 mb-1">
+                            <span>Week 1</span>
+                            <span>
+                                {{ str_contains(session('currentSession'), 'Fall') || str_contains(session('currentSession'), 'Spring') ? 16 : 8 }}
+                            </span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5">
+                            @php
+                                $totalWeeks =
+                                    str_contains(session('currentSession'), 'Fall') ||
+                                    str_contains(session('currentSession'), 'Spring')
+                                        ? 16
+                                        : 8;
+                                $currentWeek = session('current_week', 1);
+                                $percentCompleted = round(($currentWeek / $totalWeeks) * 100);
+                            @endphp
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ $percentCompleted }}%"></div>
+                        </div>
+                        <div class="text-right mt-1">
+                            <span class="text-xs font-medium text-blue-600">{{ $percentCompleted }}% completed</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-2.5">
-                @php
-                    $totalWeeks = str_contains(session('currentSession'), 'Fall') || str_contains(session('currentSession'), 'Spring') ? 16 : 8;
-                    $currentWeek = session('current_week', 1);
-                    $percentCompleted = round(($currentWeek / $totalWeeks) * 100);
-                @endphp
-                <div class="bg-blue-600 h-2.5 rounded-full" style="width: {{ $percentCompleted }}%"></div>
-            </div>
-            <div class="text-right mt-1">
-                <span class="text-xs font-medium text-blue-600">{{ $percentCompleted }}% completed</span>
-            </div>
-        </div>
-    </div>
-</div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const currentWeek = {{ session('current_week', 1) }};
-        const totalWeeks = {{ str_contains(session('currentSession'), 'Fall') || str_contains(session('currentSession'), 'Spring') ? 16 : 8 }};
-        const progressPercentage = (currentWeek / totalWeeks) * 100;
-        
-        const circle = document.getElementById('progress-ring-circle');
-        const radius = circle.r.baseVal.value;
-        const circumference = 2 * Math.PI * radius;
-        const offset = circumference - (progressPercentage / 100) * circumference;
-        
-        circle.style.strokeDasharray = circumference;
-        circle.style.strokeDashoffset = offset;
-    });
-</script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const currentWeek = {{ session('current_week', 1) }};
+                    const totalWeeks =
+                        {{ str_contains(session('currentSession'), 'Fall') || str_contains(session('currentSession'), 'Spring') ? 16 : 8 }};
+                    const progressPercentage = (currentWeek / totalWeeks) * 100;
+
+                    const circle = document.getElementById('progress-ring-circle');
+                    const radius = circle.r.baseVal.value;
+                    const circumference = 2 * Math.PI * radius;
+                    const offset = circumference - (progressPercentage / 100) * circumference;
+
+                    circle.style.strokeDasharray = circumference;
+                    circle.style.strokeDashoffset = offset;
+                });
+            </script>
 
             <!-- Quick Actions -->
             <div class="dashboard-grid">
@@ -827,8 +834,6 @@
                                 <span class="icon">📋</span>
                                 <span class="text">Copy Previous Content</span>
                             </a>
-
-                            <!-- View Section -->
                             <a href="{{ route('hod.teachers.view') }}" class="action-btn"
                                 onclick="logFunction('View Teachers');">
                                 <span class="icon">👨‍🏫</span>
@@ -843,6 +848,12 @@
                                 onclick="logFunction('View Courses');">
                                 <span class="icon">📚</span>
                                 <span class="text">View Courses</span>
+                            </a>
+                            <a href="{{ route('Audit_Report') }}" class="action-btn"
+                                onclick="logFunction('View Courses');">
+                                <span class="icon">🔍
+                                </span>
+                                <span class="text">Audit Report</span>
                             </a>
                         </div>
                     </div>
@@ -863,7 +874,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="activity-feed">
-                                    <!-- Activity items will be inserted here by JavaScript -->
+
                                 </tbody>
                             </table>
                         </div>
@@ -882,7 +893,7 @@
                             <a href="{{ route('hod.sessions.add') }}" class="action-btn"
                                 onclick="logFunction('Add Sessions');">
                                 <span class="icon">📅</span>
-                                <span class="text">Add Sessions</span>
+                                <span class="text">Manage Sessions</span>
                             </a>
                             <a href="{{ route('hod.archives.manage') }}" class="action-btn"
                                 onclick="logFunction('Manage Archives');">
@@ -914,6 +925,12 @@
                                 <span class="icon">🔑</span>
                                 <span class="text">Update Credentials</span>
                             </a>
+                            <a href="{{ route('task_limit') }}" class="action-btn"
+                                onclick="logFunction('Task Limit');">
+                                <span class="icon">📋</span>
+                                <span class="text">Set Task Limit</span>
+                            </a>
+
                         </div>
                     </div>
                 </div>

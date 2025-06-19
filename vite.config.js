@@ -2,8 +2,6 @@ import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import tailwindcss from 'tailwindcss';
 import os from 'os';
-
-// Function to get local network IP
 function getLocalNetworkIP() {
     const interfaces = os.networkInterfaces();
     for (const name in interfaces) {
@@ -17,6 +15,8 @@ function getLocalNetworkIP() {
 }
 
 const localIP = getLocalNetworkIP();
+
+
 
 export default defineConfig({
     plugins: [

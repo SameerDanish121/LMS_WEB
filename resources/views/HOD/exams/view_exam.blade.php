@@ -294,7 +294,7 @@
 
     <script>
         // API Configuration
-        let API_BASE_URL = "http://192.168.0.107:8000/";
+        let API_BASE_URL = "http://192.168.0.104:8000/";
         
         // DOM Elements
         const loadingOverlay = document.getElementById('loading-overlay');
