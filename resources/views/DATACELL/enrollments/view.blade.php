@@ -181,19 +181,18 @@
     @include('DATACELL.partials.nav')
     <div class="container mx-auto px-4 py-6">
         <h2 class="text-2xl sm:text-3xl font-bold text-blue-700 text-center mb-4">Enrolments Management</h2>
-
         <!-- Action Buttons -->
-        <div class="mb-6 flex flex-wrap gap-4 justify-center sm:justify-between">
-            <button id="upload-excel-btn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
-                📤 Upload Enrolments Via Excel
-            </button>
-            <button id="offer-course-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
-                ➕ Offer New Course
-            </button>
-            <button id="add-enrolment-btn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center">
-                👥 Add New Enrolment
-            </button>
-        </div>
+       <div class="mb-6 flex flex-wrap gap-4 justify-end">
+    <button id="upload-excel-btn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
+        📤 Upload Enrolments ( Excel )
+    </button>
+    <button id="offer-course-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
+        ➕ Offer New Course
+    </button>
+    <a href="{{ route('enrolments.create') }}" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex items-center">
+        👥 Add New Enrolment
+    </a>
+</div>
 
         <!-- Offer New Course Panel -->
         <div id="offer-course-panel" class="collapsible mb-6">
@@ -223,51 +222,6 @@
                 </div>
                 <div id="offer-course-loader" class="loader"></div>
                 <div id="offer-course-message" class="mt-2 text-sm hidden"></div>
-            </div>
-        </div>
-
-        <!-- Add New Enrolment Panel -->
-        <div id="add-enrolment-panel" class="collapsible mb-6">
-            <div class="collapsible-header">
-                <h3 class="text-lg font-semibold">Add New Enrolment</h3>
-                <span>➕</span>
-            </div>
-            <div class="collapsible-content">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-1">Session</label>
-                        <select id="enrolment-session-dropdown" class="border rounded-lg p-2 w-full">
-                            <option value="">Select Session</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-1">Course</label>
-                        <select id="enrolment-course-dropdown" class="border rounded-lg p-2 w-full" disabled>
-                            <option value="">Select Course</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-1">Section</label>
-                        <select id="enrolment-section-dropdown" class="border rounded-lg p-2 w-full" disabled>
-                            <option value="">Select Section</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-600 mb-1">Student</label>
-                        <select id="enrolment-student-dropdown" class="border rounded-lg p-2 w-full" disabled>
-                            <option value="">Select Student</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="flex justify-end">
-                    <button id="add-enrolment-submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-                        Add Enrolment
-                    </button>
-                </div>
-                <div id="add-enrolment-loader" class="loader"></div>
-                <div id="add-enrolment-message" class="mt-2 text-sm hidden"></div>
             </div>
         </div>
 
@@ -613,17 +567,12 @@
                     const sessionDropdown = document.getElementById('report-session-dropdown');
                     sessionDropdown.innerHTML = '<option value="">Select Session</option>';
 
-                    // Also populate the enrolment session dropdown
-                    const enrolmentSessionDropdown = document.getElementById('enrolment-session-dropdown');
-                    enrolmentSessionDropdown.innerHTML = '<option value="">Select Session</option>';
-
                     data.data.forEach(session => {
                         const option = document.createElement('option');
                         option.value = session.session_name;
                         option.textContent = session.session_name;
                         option.setAttribute('data-session-name', session.session_name);
-                        sessionDropdown.appendChild(option.cloneNode(true));
-                        enrolmentSessionDropdown.appendChild(option);
+                        sessionDropdown.appendChild(option);
                     });
                 }
             } catch (error) {
@@ -873,33 +822,6 @@
             document.getElementById('no-enrolment-message').classList.remove('hidden');
         }
 
-        // Load all students for dropdown
-        async function loadAllStudents() {
-            try {
-                API_BASE_URL = await getApiBaseUrl();
-                const response = await fetch(`${API_BASE_URL}api/Dropdown/AllStudentData`);
-                const data = await response.json();
-                
-                if (data) {
-                    allStudents = data;
-                    const studentDropdown = document.getElementById('enrolment-student-dropdown');
-                    studentDropdown.innerHTML = '<option value="">Select Student</option>';
-                    
-                    data.forEach(student => {
-                        const option = document.createElement('option');
-                        option.value = student.id;
-                        option.textContent = student.Format;
-                        studentDropdown.appendChild(option);
-                    });
-                    
-                    studentDropdown.disabled = false;
-                }
-            } catch (error) {
-                console.error("Error fetching students:", error);
-                showAlert('error', 'Failed to load students. Please try again.');
-            }
-        }
-
         // Load all sections for dropdown
         async function loadAllSections() {
             try {
@@ -922,162 +844,6 @@
             } catch (error) {
                 console.error("Error fetching sections:", error);
                 showAlert('error', 'Failed to load sections. Please try again.');
-            }
-        }
-
-        // Load enrolment session courses
-        function loadEnrolmentSessionCourses() {
-            const sessionDropdown = document.getElementById('enrolment-session-dropdown');
-            const selectedSessionName = sessionDropdown.value;
-
-            if (!selectedSessionName) {
-                document.getElementById('enrolment-course-dropdown').disabled = true;
-                document.getElementById('enrolment-course-dropdown').innerHTML = '<option value="">Select Course</option>';
-                document.getElementById('enrolment-section-dropdown').disabled = true;
-                document.getElementById('enrolment-section-dropdown').innerHTML = '<option value="">Select Section</option>';
-                document.getElementById('enrolment-student-dropdown').disabled = true;
-                return;
-            }
-
-            const selectedSession = reportData.find(session => session.session_name === selectedSessionName);
-            const courseDropdown = document.getElementById('enrolment-course-dropdown');
-            courseDropdown.innerHTML = '<option value="">Select Course</option>';
-
-            if (selectedSession && selectedSession.courses) {
-                selectedSession.courses.forEach(course => {
-                    const option = document.createElement('option');
-                    option.value = course.course_id;
-                    option.textContent = `${course.course_code} - ${course.course_name}`;
-                    courseDropdown.appendChild(option);
-                });
-
-                courseDropdown.disabled = false;
-                document.getElementById('enrolment-section-dropdown').disabled = true;
-                document.getElementById('enrolment-section-dropdown').innerHTML = '<option value="">Select Section</option>';
-                document.getElementById('enrolment-student-dropdown').disabled = true;
-            }
-        }
-
-        // Load enrolment course sections
-        function loadEnrolmentCourseSections() {
-            const sessionDropdown = document.getElementById('enrolment-session-dropdown');
-            const selectedSessionName = sessionDropdown.value;
-            const courseDropdown = document.getElementById('enrolment-course-dropdown');
-            const selectedCourseId = courseDropdown.value;
-
-            if (!selectedCourseId) {
-                document.getElementById('enrolment-section-dropdown').disabled = true;
-                document.getElementById('enrolment-section-dropdown').innerHTML = '<option value="">Select Section</option>';
-                document.getElementById('enrolment-student-dropdown').disabled = true;
-                return;
-            }
-
-            const selectedSession = reportData.find(session => session.session_name === selectedSessionName);
-            const sectionDropdown = document.getElementById('enrolment-section-dropdown');
-            sectionDropdown.innerHTML = '<option value="">Select Section</option>';
-
-            if (selectedSession && selectedSession.courses) {
-                const selectedCourse = selectedSession.courses.find(course => course.course_id == selectedCourseId);
-
-                if (selectedCourse && selectedCourse.sections) {
-                    selectedCourse.sections.forEach(section => {
-                        const option = document.createElement('option');
-                        option.value = section.section_id;
-                        option.textContent = section.section_name;
-                        sectionDropdown.appendChild(option);
-                    });
-
-                    sectionDropdown.disabled = false;
-                    document.getElementById('enrolment-student-dropdown').disabled = false;
-                }
-            }
-        }
-
-        // Add new enrolment
-        async function addEnrolment() {
-            const sessionName = document.getElementById('enrolment-session-dropdown').value;
-            const courseId = document.getElementById('enrolment-course-dropdown').value;
-            const sectionId = document.getElementById('enrolment-section-dropdown').value;
-            const studentId = document.getElementById('enrolment-student-dropdown').value;
-            
-            if (!sessionName || !courseId || !sectionId || !studentId) {
-                showMessage('add-enrolment-message', 'Please fill all fields', 'error');
-                return;
-            }
-            
-            try {
-                document.getElementById('add-enrolment-loader').style.display = 'block';
-                document.getElementById('add-enrolment-message').classList.add('hidden');
-                
-                // First, we need to get the offered_course_id for this session and course
-                const session = reportData.find(s => s.session_name === sessionName);
-                if (!session) {
-                    showMessage('add-enrolment-message', 'Session not found', 'error');
-                    return;
-                }
-                
-                const course = session.courses.find(c => c.course_id == courseId);
-                if (!course) {
-                    showMessage('add-enrolment-message', 'Course not found', 'error');
-                    return;
-                }
-                
-                // Assuming we can use the first section's offered_course_id (may need API adjustment)
-                let offeredCourseId = null;
-                if (course.sections && course.sections.length > 0) {
-                    const section = course.sections.find(s => s.section_id == sectionId);
-                    if (section && section.enrollments && section.enrollments.length > 0) {
-                        offeredCourseId = section.enrollments[0].student_offered_course_id;
-                    }
-                }
-                
-                if (!offeredCourseId) {
-                    // If no existing enrolments, we might need a different approach
-                    showMessage('add-enrolment-message', 'Could not determine offered course. Please add at least one enrolment first.', 'error');
-                    return;
-                }
-                
-                const response = await fetch(`${API_BASE_URL}api/Insertion/enrollment/add`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        student_id: studentId,
-                        offered_course_id: offeredCourseId,
-                        section_id: sectionId
-                    })
-                });
-                
-                const data = await response.json();
-                
-                if (data.status === 'success') {
-                    showMessage('add-enrolment-message', 'Enrolment added successfully!', 'success');
-                    // Reload the report data to get fresh data
-                    setTimeout(async () => {
-                        await loadReportSessions();
-                        // Reapply current filters if any
-                        if (currentFilters.session) {
-                            document.getElementById('report-session-dropdown').value = currentFilters.session;
-                            loadReportCourses();
-                            if (currentFilters.course) {
-                                document.getElementById('report-course-dropdown').value = currentFilters.course;
-                                loadReportSections();
-                                if (currentFilters.section) {
-                                    document.getElementById('report-section-dropdown').value = currentFilters.section;
-                                    loadEnrolments();
-                                }
-                            }
-                        }
-                    }, 1500);
-                } else {
-                    showMessage('add-enrolment-message', data.message || 'Failed to add enrolment.', 'error');
-                }
-            } catch (error) {
-                console.error('Error adding enrolment:', error);
-                showMessage('add-enrolment-message', 'An error occurred while adding enrolment.', 'error');
-            } finally {
-                document.getElementById('add-enrolment-loader').style.display = 'none';
             }
         }
 
@@ -1252,24 +1018,14 @@
             // Load initial data
             await loadSessions();
             await loadReportSessions();
-            await loadAllStudents();
+            await loadAllSections();
             
             // Set up event listeners
             document.getElementById('session-dropdown').addEventListener('change', loadCoursesForSession);
             document.getElementById('offer-course-submit').addEventListener('click', offerCourse);
             
-            document.getElementById('enrolment-session-dropdown').addEventListener('change', loadEnrolmentSessionCourses);
-            document.getElementById('enrolment-course-dropdown').addEventListener('change', loadEnrolmentCourseSections);
-            document.getElementById('add-enrolment-submit').addEventListener('click', addEnrolment);
-            
             document.getElementById('offer-course-btn').addEventListener('click', function() {
                 document.getElementById('offer-course-panel').classList.add('active');
-                document.getElementById('add-enrolment-panel').classList.remove('active');
-            });
-            
-            document.getElementById('add-enrolment-btn').addEventListener('click', function() {
-                document.getElementById('add-enrolment-panel').classList.add('active');
-                document.getElementById('offer-course-panel').classList.remove('active');
             });
         });
     </script>

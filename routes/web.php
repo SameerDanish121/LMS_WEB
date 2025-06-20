@@ -56,6 +56,11 @@ Route::prefix('datacell')->group(function () {
     Route::view('/re_enroll', 'DATACELL.Parent.review_re_enroll')->name('re_enroll.request');
     //PROMOTION SCENRAIO
     Route::view('/promote/students', 'DATACELL.result.promote')->name('promote');
+    //EDIT-MANAGEMENT
+    Route::view('/manage/staff', 'DATACELL.Core_Management.Manage_Management')->name('manage_staff');
+    //Add-Enroll
+ Route::view('/single/enrollments', 'DATACELL.enrollments.add_new_enrollments_with_form')->name('enrolments.create');
+    
 });
 //```````````````````````````````````HOD ( SAMEER )``````````````````````````````````//
 Route::prefix('hod')->group(function () {

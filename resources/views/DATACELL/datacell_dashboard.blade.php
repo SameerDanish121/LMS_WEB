@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,7 +39,8 @@
             padding: 0;
             box-sizing: border-box;
         }
- /* Footer */
+
+        /* Footer */
         footer {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: var(--white);
@@ -61,6 +63,7 @@
         .footer-text {
             margin-bottom: 1rem;
         }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background-color: var(--gray-100);
@@ -122,8 +125,13 @@
         }
 
         @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
         }
 
         .announcement-item {
@@ -340,6 +348,7 @@
         }
     </style>
 </head>
+
 <body class="datacell-dashboard">
     @include('DATACELL.partials.nav')
     <main class="main-content">
@@ -429,19 +438,23 @@
                         </div>
                         <div class="card-body">
                             <div class="actions-grid">
-                                <a href="{{ route('datacell.add.student_excel') }}" class="action-btn" onclick="logFunction('Student Via Excel');">
+                                <a href="{{ route('datacell.add.student_excel') }}" class="action-btn"
+                                    onclick="logFunction('Student Via Excel');">
                                     <span class="icon">📊</span>
                                     <span class="text">Student Via Excel</span>
                                 </a>
-                                <a href="{{ route('datacell.add.enroll_excel') }}" class="action-btn" onclick="logFunction('Enrollments Via Excel');">
+                                <a href="{{ route('datacell.add.enroll_excel') }}" class="action-btn"
+                                    onclick="logFunction('Enrollments Via Excel');">
                                     <span class="icon">📊</span>
                                     <span class="text">Enrollments Via Excel</span>
                                 </a>
-                                <a href="{{ route('datacell.add.exam_excel') }}" class="action-btn" onclick="logFunction('Exam Via Excel');">
+                                <a href="{{ route('datacell.add.exam_excel') }}" class="action-btn"
+                                    onclick="logFunction('Exam Via Excel');">
                                     <span class="icon">📊</span>
                                     <span class="text">Exam Via Excel</span>
                                 </a>
-                                <a href="{{ route('datacell.add.result_excel') }}" class="action-btn" onclick="logFunction('Subject Result Via Excel');">
+                                <a href="{{ route('datacell.add.result_excel') }}" class="action-btn"
+                                    onclick="logFunction('Subject Result Via Excel');">
                                     <span class="icon">📊</span>
                                     <span class="text">Subject Result Via Excel</span>
                                 </a>
@@ -457,31 +470,46 @@
                         </div>
                         <div class="card-body">
                             <div class="actions-grid">
-                                <a href="{{ route('datacell.view.student') }}" class="action-btn" onclick="logFunction('Student Full View');">
+                                <a href="{{ route('datacell.view.student') }}" class="action-btn"
+                                    onclick="logFunction('Student Full View');">
                                     <span class="icon">👨‍🎓</span>
                                     <span class="text">View Student,s</span>
                                 </a>
-                                <a href="{{ route('datacell.view.enroll') }}" class="action-btn" onclick="logFunction('Enrollments Full View');">
+                                <a href="{{ route('datacell.view.enroll') }}" class="action-btn"
+                                    onclick="logFunction('Enrollments Full View');">
                                     <span class="icon">📑</span>
                                     <span class="text">View Enrollment,s</span>
                                 </a>
-                                <a href="{{ route('datacell.view.exam') }}" class="action-btn" onclick="logFunction('Exam Full View');">
+                                <a href="{{ route('datacell.view.exam') }}" class="action-btn"
+                                    onclick="logFunction('Exam Full View');">
                                     <span class="icon">📑</span>
                                     <span class="text">View Exam Marks</span>
                                 </a>
-                                <a href="{{ route('datacell.view.result') }}" class="action-btn" onclick="logFunction('Full Subject Result View');">
+                                <a href="{{ route('datacell.view.result') }}" class="action-btn"
+                                    onclick="logFunction('Full Subject Result View');">
                                     <span class="icon">📑</span>
                                     <span class="text">View Subject Result</span>
                                 </a>
-                                 <a href="{{ route('degree_program') }}" class="action-btn" onclick="logFunction('Full Subject Result View');">
+                                <a href="{{ route('degree_program') }}" class="action-btn"
+                                    onclick="logFunction('Full Subject Result View');">
                                     <span class="icon">🎓</span>
                                     <span class="text">Manage Degree Program</span>
                                 </a>
-                                 <a href="{{ route('parents.view') }}" class="action-btn" onclick="logFunction('Full Subject Result View');">
+                                <a href="{{ route('parents.view') }}" class="action-btn"
+                                    onclick="logFunction('Full Subject Result View');">
                                     <span class="icon">👨‍👩‍👧</span>
                                     <span class="text">Manage Parent Profile</span>
                                 </a>
-                                
+                                <a href="{{ route('promote') }}" class="action-btn"
+                                    onclick="logFunction('Student Promotion Page');">
+                                    <span class="icon">🎓</span>
+                                    <span class="text">Promote Students</span>
+                                </a>
+                                <a href="{{ route('manage_staff') }}" class="action-btn"
+                                    onclick="logFunction('Manage Staff Page');">
+                                    <span class="icon">🧑‍💼</span>
+                                    <span class="text">Manage Staff</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -497,27 +525,33 @@
                         </div>
                         <div class="card-body">
                             <div class="actions-grid">
-                                 <a href="{{ route('datacell.add.student') }}" class="action-btn" onclick="logFunction('Add Admin');">
+                                <a href="{{ route('datacell.add.student') }}" class="action-btn"
+                                    onclick="logFunction('Add Admin');">
                                     <span class="icon">👤</span>
                                     <span class="text">Add Student</span>
                                 </a>
-                                <a href="{{ route('datacell.add.admin') }}" class="action-btn" onclick="logFunction('Add Admin');">
+                                <a href="{{ route('datacell.add.admin') }}" class="action-btn"
+                                    onclick="logFunction('Add Admin');">
                                     <span class="icon">👤</span>
                                     <span class="text">Add Admin</span>
                                 </a>
-                                <a href="{{ route('datacell.add.datacell') }}" class="action-btn" onclick="logFunction('Add Datacell');">
+                                <a href="{{ route('datacell.add.datacell') }}" class="action-btn"
+                                    onclick="logFunction('Add Datacell');">
                                     <span class="icon">👥</span>
                                     <span class="text">Add Datacell</span>
                                 </a>
-                                <a href="{{ route('datacell.add.hod') }}" class="action-btn" onclick="logFunction('Add HOD');">
+                                <a href="{{ route('datacell.add.hod') }}" class="action-btn"
+                                    onclick="logFunction('Add HOD');">
                                     <span class="icon">👨‍💼</span>
                                     <span class="text">Add HOD</span>
                                 </a>
-                                <a href="{{ route('datacell.add.director') }}" class="action-btn" onclick="logFunction('Add Director');">
+                                <a href="{{ route('datacell.add.director') }}" class="action-btn"
+                                    onclick="logFunction('Add Director');">
                                     <span class="icon">👨‍💼</span>
                                     <span class="text">Add Director</span>
                                 </a>
-                                 <a href="{{ route('parents.add') }}" class="action-btn" onclick="logFunction('Add Director');">
+                                <a href="{{ route('parents.add') }}" class="action-btn"
+                                    onclick="logFunction('Add Director');">
                                     <span class="icon">👨‍💼</span>
                                     <span class="text">Add Parent</span>
                                 </a>
@@ -533,23 +567,28 @@
                         </div>
                         <div class="card-body">
                             <div class="actions-grid">
-                                <a href="{{ route('Datacell.temp.enroll') }}" class="action-btn" onclick="logFunction('Approve Enrollments');">
+                                <a href="{{ route('Datacell.temp.enroll') }}" class="action-btn"
+                                    onclick="logFunction('Approve Enrollments');">
                                     <span class="icon">✅</span>
                                     <span class="text">Approve Enrollments</span>
                                 </a>
-                                <a href="{{ route('re_enroll.request') }}" class="action-btn" onclick="logFunction('Approve Improvements');">
+                                <a href="{{ route('re_enroll.request') }}" class="action-btn"
+                                    onclick="logFunction('Approve Improvements');">
                                     <span class="icon">🔄</span>
                                     <span class="text">Approve Improvements</span>
                                 </a>
-                                <a href="{{ route('datacell.notification') }}" class="action-btn" onclick="logFunction('Send Notification');">
+                                <a href="{{ route('datacell.notification') }}" class="action-btn"
+                                    onclick="logFunction('Send Notification');">
                                     <span class="icon">📨</span>
                                     <span class="text">Send Notification</span>
                                 </a>
-                                <a href="{{ route('datacell.view.section') }}" class="action-btn" onclick="logFunction('Manage Section');">
+                                <a href="{{ route('datacell.view.section') }}" class="action-btn"
+                                    onclick="logFunction('Manage Section');">
                                     <span class="icon">📋</span>
                                     <span class="text">Manage Section</span>
                                 </a>
-                                <a href="{{ route('datacell.user') }}" class="action-btn" onclick="logFunction('Manage User');">
+                                <a href="{{ route('datacell.user') }}" class="action-btn"
+                                    onclick="logFunction('Manage User');">
                                     <span class="icon">👥</span>
                                     <span class="text">Manage User</span>
                                 </a>
@@ -560,7 +599,7 @@
             </div>
         </div>
     </main>
-     <footer>
+    <footer>
         <div class="footer-content">
             <h2 class="footer-title">Learning Management System</h2>
             <p class="footer-text">Comprehensive platform for educational management</p>
@@ -581,7 +620,10 @@
 
             callLog.unshift({
                 name: actionName,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                time: new Date().toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
             });
 
             if (callLog.length > MAX_LOG_ENTRIES) {
@@ -592,12 +634,26 @@
         }
 
         // Initial sample activity data
-        const activities = [
-            { action: "New student data uploaded", time: "Just now" },
-            { action: "Exam results updated", time: "5 minutes ago" },
-            { action: "Notification sent", time: "30 minutes ago" },
-            { action: "System backup completed", time: "2 hours ago" },
-            { action: "New enrollment approved", time: "5 hours ago" }
+        const activities = [{
+                action: "New student data uploaded",
+                time: "Just now"
+            },
+            {
+                action: "Exam results updated",
+                time: "5 minutes ago"
+            },
+            {
+                action: "Notification sent",
+                time: "30 minutes ago"
+            },
+            {
+                action: "System backup completed",
+                time: "2 hours ago"
+            },
+            {
+                action: "New enrollment approved",
+                time: "5 hours ago"
+            }
         ];
 
         function updateActivityFeed() {
@@ -648,4 +704,5 @@
         });
     </script>
 </body>
+
 </html>
