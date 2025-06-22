@@ -15,8 +15,6 @@
     ])
     <div class="container mx-auto px-4 py-6">
         <h2 class="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-center text-gray-800">Allocated Courses</h2>
-
-        <!-- Filters Section -->
         <div class="bg-white p-4 md:p-6 rounded-lg shadow-md mb-4 md:mb-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             <select id="sessionFilter" class="border p-2 md:p-3 rounded w-full text-sm md:text-base" onchange="filterData()">
                 <option value="">All Sessions</option>
@@ -46,7 +44,7 @@
                             <th class="border p-2 md:p-3  hidden sm:table-cell">Session</th>
                             <th class="border p-2 md:p-3">Section</th>
                             <th class="border p-2 md:p-3 hidden sm:table-cell">Enrollments</th>
-                            <th class="border p-2 md:p-3">Action</th>
+                            <th class="border p-2 md:p-3 md:hidden" >Action</th>
                         </tr>
                     </thead>
                     <tbody id="courseTableBody">
@@ -70,7 +68,7 @@
                 <!-- Content will be inserted here -->
             </div>
             <div class="mt-4 flex justify-end">
-                <button id="modalViewButton" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded mr-2">View</button>
+                <button id="modalViewButton" class=""></button>
                 <button onclick="closeMobileDetail()" class="bg-gray-300 hover:bg-gray-400 px-4 py-2 rounded">Close</button>
             </div>
         </div>
@@ -136,7 +134,7 @@
                 <td class="border p-2 md:p-3 ">${course.Section_name}</td>
                 <td class="border p-2 md:p-3 hidden sm:table-cell">${course.total_enrollments}</td>
                 <td class="border p-2 md:p-3">
-                    <a href="${studentDetailsUrl}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 md:px-4 md:py-2 rounded text-sm md:text-base ">View</a>
+
                     <button onclick="showMobileDetail(${JSON.stringify(course).replace(/"/g, '&quot;')}, '${studentDetailsUrl}')" class="bg-blue-600 hover:bg-blue-700 text-white px-2 py-1 rounded text-sm md:hidden mt-2">Details</button>
                 </td>
             </tr>`;

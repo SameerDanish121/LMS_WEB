@@ -224,7 +224,7 @@
 <body>
     <div class="login-container">
         <div class="university-header animate-fade-in">
-            <!-- Replace with your actual university logo -->
+          
             <div class="system-name">Learning Management System</div>
         </div>
 

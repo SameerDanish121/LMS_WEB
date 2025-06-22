@@ -59,8 +59,8 @@ Route::prefix('datacell')->group(function () {
     //EDIT-MANAGEMENT
     Route::view('/manage/staff', 'DATACELL.Core_Management.Manage_Management')->name('manage_staff');
     //Add-Enroll
- Route::view('/single/enrollments', 'DATACELL.enrollments.add_new_enrollments_with_form')->name('enrolments.create');
-    
+    Route::view('/single/enrollments', 'DATACELL.enrollments.add_new_enrollments_with_form')->name('enrolments.create');
+
 });
 //```````````````````````````````````HOD ( SAMEER )``````````````````````````````````//
 Route::prefix('hod')->group(function () {
@@ -329,7 +329,8 @@ Route::prefix('director')->group(function () {
         return view('DIRECTOR.Trancript', compact('student'));
     })->name('Director.details');
     Route::get('/excludeddays', function () {
-        return view('DIRECTOR.ExcludedDays'); })->name('Director.excludedDays');
+        return view('DIRECTOR.ExcludedDays');
+    })->name('Director.excludedDays');
 
 });
 
@@ -363,6 +364,7 @@ Route::get('/clear-session', function () {
     return response()->json(['status' => 'success', 'message' => 'Session cleared successfully.']);
 })->name('clear.session');
 Route::get('/', function () {
+     Session::flush();
     return view('AUTHENTICATION.login');
 })->name('login');
 Route::post('/login', [AuthController::class, 'handleLogin'])->name('handleLogin');
@@ -379,20 +381,32 @@ Route::get('/verify-otp-show', function () {
 })->name('otp.form');
 Route::post('/verify-otp-ver', [AuthController::class, 'verifyOTP'])->name('verify.otp');
 Route::get('/datacell/dashboard', function () {
+     if (session('userType') !== 'Datacell') {
+        return redirect()->route('caught.it');
+    }
     $userData = session('userData');
     if (!empty($userData['user_id'])) {
         session(['user_id' => $userData['user_id']]);
     }return view('DATACELL.datacell_dashboard', compact('userData'));
 })->name('datacell.dashboard');
 Route::get('/admin/dashboard', function () {
+     if (session('userType') !== 'Admin') {
+        return redirect()->route('caught.it');
+    }
     $userData = session('userData');
     if (!empty($userData['user_id'])) {
         session(['user_id' => $userData['user_id']]);
     }return view('admin.Admin_Home', compact('userData'));
 })->name('admin.dashboard');
 Route::get('/hod/dashboard', function () {
+      if (session('userType') !== 'HOD') {
+        return redirect()->route('caught.it');
+    }
     return view('HOD.hod_dashboard');
 })->name('hod.dashboard');
 Route::get('/director/dashboard', function () {
+      if (session('userType') !== 'Director') {
+        return redirect()->route('caught.it');
+    }
     return view('DIRECTOR.director_dashboard');
 })->name('director.dashboard');

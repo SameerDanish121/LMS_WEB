@@ -15,12 +15,12 @@ class ApiController extends Controller
     }
     public function updateApiUrl(Request $request)
     {
-        $url = $request->query('url'); // Get URL from query parameter
+        $url = $request->query('url'); 
         if (!$url) {
             return response()->json(['error' => 'API Base URL is required'], 400);
         }
 
-        ApiConfig::setApiBaseUrl($url); // Update static property and cache
+        ApiConfig::setApiBaseUrl($url);
 
         return response()->json([
             'message' => 'API Base URL updated successfully!',

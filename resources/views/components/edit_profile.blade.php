@@ -43,8 +43,6 @@ $phoneNumber = session('phoneNumber', '');
     <div class="max-w-4xl mx-auto p-6">
         <div class="bg-white shadow-lg rounded-lg overflow-hidden p-6">
             <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">Edit Profile</h2>
-
-            <!-- Profile Image Section -->
             <div class="flex justify-center relative mb-6">
                 <div class="relative">
                     <img id="profilePreview" src="{{ $profileImage }}" class="w-32 h-32 rounded-full object-cover border-4 border-gray-300 cursor-pointer" onclick="triggerFileInput()">

@@ -6,44 +6,6 @@
     <title>LMS Dashboard - Student Profile</title>
     @vite('resources/css/app.css')
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        function toggleMenu() {
-            document.getElementById("mobileMenu").classList.toggle("hidden");
-        }
-        let API_BASE_URL = "http://192.168.1.13:8000/";
-        async function getApiBaseUrl() {
-            try {
-                let response = await fetch('/get-api-url');
-                let data = await response.json();
-                return data.api_base_url;
-            } catch (error) {
-                return API_BASE_URL;
-            }
-        }
-        async function downloadTranscript(studentId) {
-            try {
-                let API_BASE_URL = await getApiBaseUrl();
-                const response = await fetch(`${API_BASE_URL}api/Students/TranscriptPDF?student_id=${studentId}`);
-
-                if (!response.ok) {
-                    throw new Error("Failed to fetch transcript.");
-                }
-
-                const blob = await response.blob();
-                const link = document.createElement("a");
-                link.href = URL.createObjectURL(blob);
-                link.download = `Transcript_${studentId}.pdf`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-
-                URL.revokeObjectURL(link.href);
-            } catch (error) {
-                console.error("Error downloading transcript:", error);
-                alert("Failed to download transcript.");
-            }
-        }
-    </script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -116,13 +78,12 @@
         .session-header:hover {
             background: linear-gradient(to right,rgb(205, 210, 219),rgb(217, 218, 223));
         }
-         .sticky-top-container {
+        .sticky-top-container {
             position: sticky;
             top: 0;
             z-index: 40;
             background: white;
         }
-
         .sticky-top-bar {
             position: sticky;
             top: 0;
@@ -152,20 +113,32 @@
             color: #1e3a8a;
             font-weight: 500;
         }
+        .loading-spinner {
+            display: inline-block;
+            width: 2rem;
+            height: 2rem;
+            border: 3px solid rgba(59, 130, 246, 0.3);
+            border-radius: 50%;
+            border-top-color: #3b82f6;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
     <!-- Header -->
     <div class="sticky-top-container">
-    <div class="sticky-top-bar">
-        <div class="flex items-center">
-            <a href="{{ route('director.dashboard') }}" class="text-xl font-bold text-blue-600">
-                Director <span class="hidden sm:inline"></span>
-            </a>
+        <div class="sticky-top-bar">
+            <div class="flex items-center">
+                <a href="{{ route('director.dashboard') }}" class="text-xl font-bold text-blue-600">
+                    Director <span class="hidden sm:inline"></span>
+                </a>
+            </div>
+            @include('DIRECTOR.Profile')
         </div>
-        @include('DIRECTOR.Profile')
     </div>
-</div>
 
     <!-- Main Content -->
     <main class="flex-grow p-4 md:p-6 lg:p-8">
@@ -284,7 +257,12 @@
                             </thead>
                             <tbody id="current-enrollments" class="bg-white divide-y divide-gray-200">
                                 <tr>
-                                    <td colspan="8" class="px-6 py-4 text-center text-gray-500">Loading...</td>
+                                    <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                                        <div class="flex justify-center items-center">
+                                            <div class="loading-spinner"></div>
+                                            <span class="ml-2">Loading current enrollments...</span>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -303,9 +281,9 @@
                     </div>
                     
                     <div id="previousEnrollmentsContainer" class="p-4 space-y-4">
-                        <!-- Data will be dynamically inserted here -->
-                        <div class="text-center p-8 text-gray-500">
-                            Loading previous enrollments...
+                        <div class="flex justify-center items-center py-8">
+                            <div class="loading-spinner"></div>
+                            <span class="ml-2">Loading previous enrollments...</span>
                         </div>
                     </div>
                 </div>
@@ -325,45 +303,110 @@
     </footer>
 
     <script>
-        function showTab(tab) {
-            document.getElementById('current').classList.add('hidden');
-            document.getElementById('previous').classList.add('hidden');
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('active', 'text-blue-600');
-                btn.classList.add('text-gray-500');
-            });
+        // Global variables
+        let API_BASE_URL = "http://127.0.0.1:8000/"; // Default fallback
+        let currentStudentId = {{ $student['id'] }};
 
-            document.getElementById(tab).classList.remove('hidden');
-            event.currentTarget.classList.add('active', 'text-blue-600');
-            event.currentTarget.classList.remove('text-gray-500');
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            fetchCurrentEnrollments();
-            fetchPreviousEnrollments({{ $student['id'] }});
-            
-            // Set the first tab as active initially
-            document.querySelector('.tab-button').classList.add('active', 'text-blue-600');
-            document.querySelector('.tab-button').classList.remove('text-gray-500');
+        // Initialize the page
+        document.addEventListener("DOMContentLoaded", function() {
+            initializePage();
         });
 
-        function fetchCurrentEnrollments() {
-            const studentId = {{ $student['id'] }};
-            fetch(`http://192.168.1.13:8001/api/Students/getActiveEnrollments?student_id=${studentId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data["Course Content"]) {
-                        displayCurrentEnrollments(data["Course Content"]);
-                    } else {
-                        document.getElementById("current-enrollments").innerHTML =
-                            `<tr><td colspan="8" class="px-6 py-4 text-center text-gray-500">No current enrollments found.</td></tr>`;
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching enrollments:", error);
-                    document.getElementById("current-enrollments").innerHTML =
-                        `<tr><td colspan="8" class="px-6 py-4 text-center text-red-500">Failed to load enrollment data.</td></tr>`;
-                });
+        async function initializePage() {
+            try {
+                // First get the API base URL
+                API_BASE_URL = await getApiBaseUrl();
+                console.log("Using API base URL:", API_BASE_URL);
+                
+                // Then load the student data
+                await fetchAllEnrollments(currentStudentId);
+                
+                // Set the first tab as active initially
+                document.querySelector('.tab-button').classList.add('active', 'text-blue-600');
+                document.querySelector('.tab-button').classList.remove('text-gray-500');
+            } catch (error) {
+                console.error("Initialization error:", error);
+                showErrorStates("Failed to initialize page");
+            }
+        }
+
+        // Get the API base URL from server configuration
+        async function getApiBaseUrl() {
+            try {
+                const response = await fetch('/get-api-url');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch API URL');
+                }
+                const data = await response.json();
+                return data.api_base_url;
+            } catch (error) {
+                console.warn("Using default API URL due to error:", error);
+                return API_BASE_URL; // Return the default URL
+            }
+        }
+
+        async function fetchAllEnrollments(studentId) {
+            try {
+                showLoadingStates();
+                
+                const response = await fetch(`${API_BASE_URL}api/Students/getAllEnrollments?student_id=${studentId}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log("API Response:", data);
+
+                if (data.success) {
+                    processResponseData(data);
+                } else {
+                    throw new Error(data.message || "API returned unsuccessful response");
+                }
+            } catch (error) {
+                console.error("Fetch error:", error);
+                showErrorStates(error.message);
+            }
+        }
+
+        function showLoadingStates() {
+            document.getElementById("current-enrollments").innerHTML = 
+                `<tr><td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                    <div class="flex justify-center items-center">
+                        <div class="loading-spinner"></div>
+                        <span class="ml-2">Loading data...</span>
+                    </div>
+                </td></tr>`;
+            document.getElementById("previousEnrollmentsContainer").innerHTML = 
+                `<div class="flex justify-center items-center py-8">
+                    <div class="loading-spinner"></div>
+                    <span class="ml-2">Loading data...</span>
+                </div>`;
+        }
+
+        function processResponseData(data) {
+            // Process current enrollments
+            if (data.CurrentCourses && data.CurrentCourses.length > 0) {
+                displayCurrentEnrollments(data.CurrentCourses);
+            } else {
+                document.getElementById("current-enrollments").innerHTML = 
+                    `<tr><td colspan="8" class="px-6 py-4 text-center text-gray-500">No current enrollments found.</td></tr>`;
+            }
+
+            // Process previous enrollments
+            if (data.PreviousCourses && Object.keys(data.PreviousCourses).length > 0) {
+                renderPreviousEnrollments(data.PreviousCourses);
+            } else {
+                document.getElementById("previousEnrollmentsContainer").innerHTML = 
+                    `<div class="text-center p-8 text-gray-500">No previous enrollments found.</div>`;
+            }
+        }
+
+        function showErrorStates(errorMessage) {
+            document.getElementById("current-enrollments").innerHTML = 
+                `<tr><td colspan="8" class="px-6 py-4 text-center text-red-500">Error: ${errorMessage}</td></tr>`;
+            document.getElementById("previousEnrollmentsContainer").innerHTML = 
+                `<div class="text-center p-8 text-red-500">Error: ${errorMessage}</div>`;
         }
 
         function displayCurrentEnrollments(courses) {
@@ -401,24 +444,6 @@
 
             document.getElementById("total-credit-hours").textContent = totalCreditHours;
             document.getElementById("current-section").textContent = mostFrequentSection || "N/A";
-        }
-
-        function fetchPreviousEnrollments(studentId) {
-            fetch(`http://127.0.0.1:8000/api/Students/getPreviousEnrollments?student_id=${studentId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data["Course Content"]) {
-                        renderPreviousEnrollments(data["Course Content"]);
-                    } else {
-                        document.getElementById("previousEnrollmentsContainer").innerHTML =
-                            `<div class="text-center p-8 text-gray-500">No previous enrollments found.</div>`;
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching previous enrollments:", error);
-                    document.getElementById("previousEnrollmentsContainer").innerHTML =
-                        `<div class="text-center p-8 text-red-500">Failed to load previous enrollment data.</div>`;
-                });
         }
 
         function renderPreviousEnrollments(enrollments) {
@@ -516,6 +541,19 @@
             icon.classList.toggle("rotate-180");
         }
 
+        function showTab(tab) {
+            document.getElementById('current').classList.add('hidden');
+            document.getElementById('previous').classList.add('hidden');
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active', 'text-blue-600');
+                btn.classList.add('text-gray-500');
+            });
+
+            document.getElementById(tab).classList.remove('hidden');
+            event.currentTarget.classList.add('active', 'text-blue-600');
+            event.currentTarget.classList.remove('text-gray-500');
+        }
+
         function showResultDetails(button) {
             const mid = button.getAttribute('data-mid');
             const final = button.getAttribute('data-final');
@@ -555,6 +593,30 @@
                     }
                 });
             }, 0);
+        }
+
+        async function downloadTranscript(studentId) {
+            try {
+                const API_BASE_URL = await getApiBaseUrl();
+                const response = await fetch(`${API_BASE_URL}api/Students/TranscriptPDF?student_id=${studentId}`);
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch transcript.");
+                }
+
+                const blob = await response.blob();
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `Transcript_${studentId}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                URL.revokeObjectURL(link.href);
+            } catch (error) {
+                console.error("Error downloading transcript:", error);
+                alert("Failed to download transcript. Please try again later.");
+            }
         }
 
         // Search Functionality

@@ -279,10 +279,10 @@
         <div class="flex justify-between items-center mb-4 flex-wrap gap-4">
             <h2 class="text-2xl sm:text-3xl font-bold text-blue-700">Teacher List</h2>
             <div class="top-actions">
-                <button class="add-btn" onclick="window.location.href='#'">
+                <button class="add-btn" onclick="window.location.href='{{ route('hod.teachers.add') }}'">
                     📝 Add Teacher
                 </button>
-                <button class="bulk-add-btn" onclick="window.location.href='#'">
+                <button class="bulk-add-btn" onclick="window.location.href='{{ route('hod.teachers.add_teacher_excel') }}'">
                     📁 Bulk Upload
                 </button>
             </div>

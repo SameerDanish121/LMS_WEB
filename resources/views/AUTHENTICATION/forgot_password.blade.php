@@ -213,7 +213,6 @@
 
         <h2 class="forgot-title animate-fade-in delay-100">Reset Your Password</h2>
         
-        <!-- Progress Steps -->
         <div class="progress-container animate-fade-in delay-200">
             <div class="progress-line" id="progress-line"></div>
             <div class="progress-bar">
@@ -223,7 +222,6 @@
             </div>
         </div>
 
-        <!-- Step 1: Email Verification -->
         <div id="step1-content" class="step-content active animate-fade-in delay-200">
             <p class="mb-4 text-sm text-gray-600 text-center">Enter your email to receive a verification code.</p>
             
@@ -244,7 +242,7 @@
             </a>
         </div>
 
-        <!-- Step 2: OTP Verification -->
+      
         <div id="step2-content" class="step-content animate-fade-in delay-200">
             <p class="mb-4 text-sm text-gray-600 text-center">Enter the verification code sent to your email.</p>
             
@@ -265,7 +263,7 @@
             </a>
         </div>
 
-        <!-- Step 3: New Password -->
+      
         <div id="step3-content" class="step-content animate-fade-in delay-200">
             <p class="mb-4 text-sm text-gray-600 text-center">Create your new password.</p>
             
@@ -298,7 +296,7 @@
         </div>
     </div>
 
-    <!-- Loader -->
+ 
     <div id="loader" class="hidden fixed top-0 left-0 w-full h-full flex justify-center items-center bg-white bg-opacity-50 z-50">
         <div class="w-20 h-20 border-4 border-transparent text-blue-400 text-4xl animate-spin flex items-center justify-center border-t-blue-400 rounded-full">
             <div class="w-16 h-16 border-4 border-transparent text-red-400 text-2xl animate-spin flex items-center justify-center border-t-red-400 rounded-full"></div>
@@ -306,7 +304,7 @@
     </div>
 
     <script>
-        // Your existing JavaScript code remains exactly the same
+      
         window.addEventListener("load", function() {
             document.getElementById("loader").classList.add("hidden");
         });
@@ -353,7 +351,7 @@
             }
         }
 
-        // Send OTP API
+       
         function sendOTP() {
             showLoader();
             let email = document.getElementById("email").value.trim();
@@ -389,7 +387,7 @@
                 });
         }
 
-        // Verify OTP API
+       
         function verifyOTP() {
             showLoader();
             let otp = document.getElementById("code").value.trim();
@@ -427,7 +425,6 @@
                 });
         }
 
-        // Update Password API
         function updatePassword() {
             showLoader();
             let newPassword = document.getElementById("password").value.trim();
@@ -460,8 +457,7 @@
                 .then(data => {
                     hideLoader();
                     alert(data.message);
-                    // localStorage.removeItem("user_id");
-                    // window.location.href = "{{ route('login') }}";
+                   
                 })
                 .catch(error => console.error("Error:", error)).finally(() => {
                     hideLoader();

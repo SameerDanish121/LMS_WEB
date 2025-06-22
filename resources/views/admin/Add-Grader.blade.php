@@ -57,8 +57,6 @@
 
             const result = await response.json();
             console.log('API Response:', result);
-
-            // Check response structure
             if (result.status && Array.isArray(result.data)) {
                 renderRequests(result.data);
             } else {
@@ -122,7 +120,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Laravel CSRF protection
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 body: JSON.stringify({ id, action })
             });
@@ -135,7 +133,7 @@
 
 
             if (result.status ) {
-                await loadPendingRequests(); // Refresh the list
+                await loadPendingRequests();
             }
         } catch (error) {
             console.error('Error processing request:', error);
@@ -163,8 +161,6 @@
         alert.className = `fixed top-4 right-4 px-6 py-4 rounded-md text-white ${bgColor} shadow-lg z-50`;
         alert.textContent = message;
         document.body.appendChild(alert);
-
-        // Add subtle animation
         alert.style.opacity = '0';
         alert.style.transform = 'translateY(-20px)';
         alert.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
@@ -174,7 +170,7 @@
             alert.style.transform = 'translateY(0)';
         }, 10);
 
-        // Remove the alert after 5 seconds with a fade-out effect
+      
         setTimeout(() => {
             alert.style.opacity = '0';
             alert.style.transform = 'translateY(-20px)';

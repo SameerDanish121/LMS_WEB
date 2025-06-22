@@ -82,7 +82,8 @@ class AuthController extends Controller
                     'student_count' => $data['HODInfo']['student_count'],
                     'faculty_count' => $data['HODInfo']['faculty_count'],
                     'offer_count' => $data['HODInfo']['offered_course_count'],
-                    'current_week' => $data['HODInfo']['Current_Week']
+                    'current_week' => $data['HODInfo']['Current_Week'],
+                    'program_id'=>$data['HODInfo']['program_id']
 
                 ]);
                 return redirect()->route('otp.form');
@@ -106,8 +107,6 @@ class AuthController extends Controller
                 ]);
                 return redirect()->route('otp.form');
             } else {
-                // Session::put('error', 'Unauthorized role.');
-                // return back()->withErrors(['error' => 'Unauthorized role.']);
                 return redirect()->route('caught.it');
             }
 
@@ -121,25 +120,25 @@ class AuthController extends Controller
             'student_id' => $studentID
         ]);
         if ($response->successful()) {
-            $data = $response->json(); // Decode JSON response
+            $data = $response->json(); 
             $student = $data['student'] ?? [];
             $program = $data['program'] ?? [];
             $sessionResults = $data['sessionResults'] ?? [];
 
-            return view('single_student_info.view_transcript', [ // Replace 'your_view_name' with the actual Blade view file name
+            return view('single_student_info.view_transcript', [
                 'student' => $student,
                 'sessionResults' => $sessionResults,
                 'program' => $program
             ]);
         }
 
-        return abort(404, 'Transcript not found'); // Handle errors
+        return abort(404, 'Transcript not found'); 
     }
     public function AllStudent(Request $request)
     {
         $response = Http::get($this->baseUrl . 'api/Admin/AllStudent');
         if ($response->successful()) {
-            $data = $response->json(); // Decode JSON
+            $data = $response->json(); 
             $students = $data['Student'] ?? [];
         } else {
             $students = [];
@@ -153,48 +152,28 @@ class AuthController extends Controller
             'student_id' => $studentID
         ]);
         if ($response->successful()) {
-            $data = $response->json(); // Decode JSON response
+            $data = $response->json();
             $student = $data['student'] ?? [];
             $program = $data['program'] ?? [];
             $sessionResults = $data['sessionResults'] ?? [];
 
-            return view('admin.view_transcript', [ // Replace 'your_view_name' with the actual Blade view file name
+            return view('admin.view_transcript', [ 
                 'student' => $student,
                 'sessionResults' => $sessionResults,
                 'program' => $program
             ]);
         }
 
-        return abort(404, 'Transcript not found'); // Handle errors
+        return abort(404, 'Transcript not found'); 
     }
 
-    // public function Transcript(Request $request)
-    // {
-    //     $studentID=$request->student_id;
-    //     $response = Http::get($this->baseUrl . 'api/Admin/viewTranscript', [
-    //         'student_id' => $studentID
-    //     ]);
-    //     if ($response->successful()) {
-    //         $data = $response->json(); // Decode JSON response
-    //         $student = $data['student'] ?? [];
-    //         $program = $data['program'] ?? [];
-    //         $sessionResults = $data['sessionResults'] ?? [];
-
-    //         return view('single_student_info.view_transcript', [ // Replace 'your_view_name' with the actual Blade view file name
-    //             'student' => $student,
-    //             'sessionResults' => $sessionResults,
-    //             'program' => $program
-    //         ]);
-    //     }
-
-    //     return abort(404, 'Transcript not found'); // Handle errors
-    // }
+  
 
     public function AllCourse(Request $request)
     {
         $response = Http::get($this->baseUrl . 'api/Admin/courses');
         if ($response->successful()) {
-            $data = $response->json(); // Decode JSON
+            $data = $response->json();
             $courses = $data['Courses'] ?? [];
         } else {
             $courses = [];
@@ -205,7 +184,7 @@ class AuthController extends Controller
     {
         $response = Http::post($this->baseUrl . 'api/Uploading/timetable/section');
         if ($response->successful()) {
-            $data = $response->json(); // Decode JSON
+            $data = $response->json(); 
             $timetable = $data['timetable'] ?? [];
         } else {
             $courses = [];
@@ -216,7 +195,7 @@ class AuthController extends Controller
     {
         $response = Http::post($this->baseUrl . 'api/Uploading/timetable/section');
         if ($response->successful()) {
-            $data = $response->json(); // Decode JSON
+            $data = $response->json(); 
             $timetable = $data['timetable'] ?? [];
         } else {
             $courses = [];
@@ -238,14 +217,13 @@ class AuthController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
         ]);
 
-        // Get logged-in user ID
+   
         $userId = session('userId');
 
         if (!$userId) {
             return back()->withErrors(['error' => 'User not authenticated.']);
         }
 
-        // Prepare data for API request
         $formData = [
             'role' => session('userType'),
             'name' => trim($request->input('name')),
@@ -254,13 +232,12 @@ class AuthController extends Controller
             'email' => $request->input('email')
         ];
 
-        // Check if image is uploaded
+    
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $formData['image'] = fopen($image->path(), 'r');
         }
 
-        // Send request to API
         $response = Http::attach(
             'image',
             $request->file('image') ? fopen($request->file('image')->path(), 'r') : null,
@@ -324,7 +301,7 @@ class AuthController extends Controller
             } else {
                 Session::put('error', $responseData['message'] ?? 'Invalid OTP. Please try again.');
                 return redirect()->route('caught.it');
-                //  return back();
+            
             }
         } catch (\Exception $e) {
             Session::put('error', $e->getMessage());
@@ -335,7 +312,7 @@ class AuthController extends Controller
     {
         $response = Http::post($this->baseUrl . 'api/Uploading/timetable/section');
         if ($response->successful()) {
-            $data = $response->json(); // Decode JSON
+            $data = $response->json();
             $timetable = $data['timetable'] ?? [];
         } else {
             $courses = [];
@@ -351,12 +328,12 @@ class AuthController extends Controller
             'student_id' => $studentID
         ]);
         if ($response->successful()) {
-            $data = $response->json(); // Decode JSON response
+            $data = $response->json(); 
             $student = $data['student'] ?? [];
             $program = $data['program'] ?? [];
             $sessionResults = $data['sessionResults'] ?? [];
 
-            return view('DIRECTOR.Trancrpitdetails', [ // Replace 'your_view_name' with the actual Blade view file name
+            return view('DIRECTOR.Trancrpitdetails', [ 
                 'student' => $student,
                 'sessionResults' => $sessionResults,
                 'program' => $program
@@ -364,7 +341,7 @@ class AuthController extends Controller
         }
 
 
-        return abort(404, 'Transcript not found'); // Handle errors
+        return abort(404, 'Transcript not found');
     }
       public function TranscriptDatacell(Request $request)
     {
@@ -373,19 +350,19 @@ class AuthController extends Controller
             'student_id' => $studentID
         ]);
         if ($response->successful()) {
-            $data = $response->json(); // Decode JSON response
+            $data = $response->json(); 
             $student = $data['student'] ?? [];
             $program = $data['program'] ?? [];
             $sessionResults = $data['sessionResults'] ?? [];
 
-            return view('DATACELL.student.view_transcript', [ // Replace 'your_view_name' with the actual Blade view file name
+            return view('DATACELL.student.view_transcript', [
                 'student' => $student,
                 'sessionResults' => $sessionResults,
                 'program' => $program
             ]);
         }
 
-        return abort(404, 'Transcript not found'); // Handle errors
+        return abort(404, 'Transcript not found'); 
     }
 
     

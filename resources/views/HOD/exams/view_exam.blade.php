@@ -294,8 +294,17 @@
 
     <script>
         // API Configuration
-        let API_BASE_URL = "http://192.168.0.104:8000/";
-        
+        let API_BASE_URL = "http://127.0.0.1:8000/";
+         const programId = "{{ session('program_id') }}";
+         async function getApiBaseUrl() {
+            try {
+                let response = await fetch('/get-api-url');
+                let data = await response.json();
+                return data.api_base_url;
+            } catch (error) {
+                return API_BASE_URL;
+            }
+        }
         // DOM Elements
         const loadingOverlay = document.getElementById('loading-overlay');
         const toastContainer = document.getElementById('toast-container');
@@ -321,9 +330,10 @@
 
         // Fetch exam data from API
         async function fetchExamData() {
+            API_BASE_URL = await getApiBaseUrl();
             showLoading();
             try {
-                const response = await fetch(`${API_BASE_URL}api/Hod/exam/all`);
+                const response = await fetch(`${API_BASE_URL}api/Hod/exam/all/${programId}`);
                 
                 if (!response.ok) throw new Error('Network response was not ok');
 
@@ -553,7 +563,7 @@
                 if (questionInputs.length === 0) {
                     throw new Error('At least one question is required');
                 }
-                
+                API_BASE_URL = await getApiBaseUrl();
                 const response = await fetch(`${API_BASE_URL}api/Hod/exam/update`, {
                     method: 'POST',
                     body: formData,

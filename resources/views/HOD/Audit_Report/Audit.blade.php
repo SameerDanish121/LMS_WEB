@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HOD Audit Report</title>
     @vite('resources/css/app.css')
     <style>
-        /* Main Color Scheme */
         :root {
             --primary-color: #4361EE;
             --active-color: #4CC9F0;
@@ -220,6 +218,17 @@
         .topic-column {
             min-width: 250px;
         }
+        
+        /* Filter checkbox */
+        .common-covered-filter {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .common-covered-filter input {
+            margin-right: 8px;
+        }
     </style>
 </head>
 
@@ -227,8 +236,6 @@
     @include('DATACELL.partials.nav')
     <div class="container mx-auto px-4 py-6">
         <h2 class="text-2xl sm:text-3xl font-bold text-blue-700 text-center mb-6">HOD Audit Report</h2>
-
-        <!-- Filter Section -->
         <div class="filter-container bg-white p-4 rounded-lg shadow-md mb-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
@@ -321,6 +328,10 @@
 
             <!-- Content Report Section -->
             <div id="content-report-section" class="hidden">
+                <div class="common-covered-filter">
+                    <input type="checkbox" id="common-covered-checkbox" onchange="renderContentReport()">
+                    <label for="common-covered-checkbox">Include Only Common Covered Topics</label>
+                </div>
                 <h3 class="section-header">Course Content Report</h3>
                 <div class="overflow-x-auto">
                     <table id="content-report-table" class="report-table">
@@ -371,6 +382,7 @@
 
     <script>
         let API_BASE_URL = "http://127.0.0.1:8000/";
+          const programId = "{{ session('program_id') }}";
         let allOfferedCourses = [];
         let currentReportData = null;
         let currentCourseHasLab = false;
@@ -404,12 +416,10 @@
                 return API_BASE_URL;
             }
         }
-
-        // Load all sessions for dropdown
         async function loadSessions() {
             try {
                 API_BASE_URL = await getApiBaseUrl();
-                const response = await fetch(`${API_BASE_URL}api/Dropdown/AllOfferedCourse`);
+                const response = await fetch(`${API_BASE_URL}api/Dropdown/Program/AllOfferedCourse/${programId}`);
                 const data = await response.json();
                 
                 if (data && data.length > 0) {
@@ -422,7 +432,7 @@
                         if (!sessionsMap.has(sessionKey)) {
                             sessionsMap.set(sessionKey, {
                                 name: course.session,
-                                id: course.session // Using name as ID since we don't have session ID
+                                id: course.session
                             });
                         }
                     });
@@ -579,6 +589,7 @@
             
             const contentReport = currentReportData.Course_Content_Report;
             const selectedWeek = document.getElementById('week-select').value;
+            const showOnlyCommonCovered = document.getElementById('common-covered-checkbox').checked;
             const table = document.getElementById('content-report-table');
             
             // Clear existing content
@@ -629,8 +640,9 @@
                     
                     // Add rows for each topic
                     weekTopics.forEach(topicName => {
-                        const topicRow = document.createElement('tr');
-                        let topicCells = `<td class="topic-column">${topicName}</td>`;
+                        // Check if topic is covered in all sections
+                        let isCommonCovered = true;
+                        const topicCoverage = {};
                         
                         sections.forEach(section => {
                             const sectionData = contentReport[section];
@@ -646,6 +658,22 @@
                                 }
                             }
                             
+                            topicCoverage[section] = isCovered;
+                            if (!isCovered) {
+                                isCommonCovered = false;
+                            }
+                        });
+                        
+                        // Skip this topic if we're only showing common covered and it's not common covered
+                        if (showOnlyCommonCovered && !isCommonCovered) {
+                            return;
+                        }
+                        
+                        const topicRow = document.createElement('tr');
+                        let topicCells = `<td class="topic-column">${topicName}</td>`;
+                        
+                        sections.forEach(section => {
+                            const isCovered = topicCoverage[section];
                             topicCells += `<td class="text-center ${isCovered ? 'status-covered' : 'status-not-covered'}">
                                 ${isCovered ? '✓' : '✗'}
                             </td>`;
@@ -669,8 +697,9 @@
                 
                 // Add rows for each topic
                 weekTopics.forEach(topicName => {
-                    const topicRow = document.createElement('tr');
-                    let topicCells = `<td class="topic-column">${topicName}</td>`;
+                    // Check if topic is covered in all sections
+                    let isCommonCovered = true;
+                    const topicCoverage = {};
                     
                     sections.forEach(section => {
                         const sectionData = contentReport[section];
@@ -686,6 +715,22 @@
                             }
                         }
                         
+                        topicCoverage[section] = isCovered;
+                        if (!isCovered) {
+                            isCommonCovered = false;
+                        }
+                    });
+                    
+                    // Skip this topic if we're only showing common covered and it's not common covered
+                    if (showOnlyCommonCovered && !isCommonCovered) {
+                        return;
+                    }
+                    
+                    const topicRow = document.createElement('tr');
+                    let topicCells = `<td class="topic-column">${topicName}</td>`;
+                    
+                    sections.forEach(section => {
+                        const isCovered = topicCoverage[section];
                         topicCells += `<td class="text-center ${isCovered ? 'status-covered' : 'status-not-covered'}">
                             ${isCovered ? '✓' : '✗'}
                         </td>`;

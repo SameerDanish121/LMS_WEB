@@ -158,7 +158,7 @@
             text-align: center;
         }
 
-        /* Loader */
+       
         #loader {
             display: none;
             position: fixed;
@@ -196,7 +196,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Animations */
+       
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -261,7 +261,6 @@
         </div>
     </div>
 
-    <!-- Loader -->
     <div id="loader">
         <div class="loader-content">
             <div class="spinner"></div>
@@ -271,19 +270,18 @@
     </div>
 
     <script>
-        // Timer variables
+      
         let countdownInterval;
-        const totalSeconds = 5 * 60; // 5 minutes in seconds
+        const totalSeconds = 5 * 60;
         let remainingSeconds = totalSeconds;
         let otpExpired = false;
 
-        // Start countdown when page loads
         document.addEventListener('DOMContentLoaded', function() {
             startCountdown();
             const otpInput = document.getElementById('otpInput');
             otpInput.focus();
             
-            // Handle paste event to clean input
+           
             otpInput.addEventListener('paste', function(e) {
                 e.preventDefault();
                 const pastedText = (e.clipboardData || window.clipboardData).getData('text');
@@ -314,7 +312,7 @@
             countdownElement.textContent = 
                 `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
             
-            // Change color when less than 1 minute remains
+           
             if (seconds <= 60) {
                 countdownElement.classList.add('expiry-warning');
             }
@@ -326,20 +324,18 @@
             countdownElement.textContent = "Expired";
             countdownElement.classList.add('expiry-warning');
             
-            // Disable the verify button
+          
             document.getElementById('verifyBtn').disabled = true;
-            
-            // Show alert
+           
             alert('This OTP has expired. Please request a new OTP.');
             
-            // Redirect back to login after 3 seconds
             setTimeout(() => {
                 window.location.href = "{{ route('login') }}";
             }, 3000);
         }
 
         document.getElementById('otpForm').addEventListener('submit', function(e) {
-            // Prevent submission if OTP expired
+          
             if (otpExpired) {
                 e.preventDefault();
                 alert('This OTP has expired. Please request a new OTP.');
@@ -347,7 +343,7 @@
                 return;
             }
             
-            // Validate OTP is exactly 6 digits
+            
             const otpInput = document.getElementById('otpInput');
             if (otpInput.value.length !== 6) {
                 e.preventDefault();
@@ -355,16 +351,15 @@
                 return;
             }
             
-            // Show loader
+            
             document.getElementById('loader').style.display = 'flex';
             
-            // Clear the countdown interval
+            
             if (countdownInterval) {
                 clearInterval(countdownInterval);
             }
         });
 
-        // Clear interval if page is reloaded/refreshed
         window.addEventListener('beforeunload', function() {
             if (countdownInterval) {
                 clearInterval(countdownInterval);

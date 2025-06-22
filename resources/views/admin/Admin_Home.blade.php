@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -187,8 +188,13 @@
         }
 
         @keyframes marquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
         }
 
         .announcement-item {
@@ -206,10 +212,21 @@
         }
 
         /* Responsive column sizing */
-        .col-span-12 { grid-column: span 12; }
-        .col-span-6 { grid-column: span 6; }
-        .col-span-4 { grid-column: span 4; }
-        .col-span-3 { grid-column: span 3; }
+        .col-span-12 {
+            grid-column: span 12;
+        }
+
+        .col-span-6 {
+            grid-column: span 6;
+        }
+
+        .col-span-4 {
+            grid-column: span 4;
+        }
+
+        .col-span-3 {
+            grid-column: span 3;
+        }
 
         /* Card Components */
         .card {
@@ -411,10 +428,21 @@
             }
         }
 
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-        .delay-400 { animation-delay: 0.4s; }
+        .delay-100 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-200 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-300 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-400 {
+            animation-delay: 0.4s;
+        }
 
         /* Responsive Design */
         @media (max-width: 1200px) {
@@ -485,8 +513,15 @@
                 justify-content: flex-start;
             }
 
-            .col-span-3, .col-span-4, .col-span-6, .col-span-8, .col-span-12,
-            .col-md-6, .col-md-12, .col-sm-6, .col-sm-12 {
+            .col-span-3,
+            .col-span-4,
+            .col-span-6,
+            .col-span-8,
+            .col-span-12,
+            .col-md-6,
+            .col-md-12,
+            .col-sm-6,
+            .col-sm-12 {
                 width: 100%;
                 margin-bottom: 1rem;
             }
@@ -615,40 +650,36 @@
         }
     </style>
 </head>
+
 <body class="admin-dashboard">
-    <!-- Keep the same navbar include as in the teachers view -->
     @include('admin.navbar', [
         'username' => session('username', 'Guest'),
         'profileImage' => session('profileImage', asset('images/male.png')),
         'designation' => session('designation', 'N/A'),
-        'type' => session('type', 'User')
+        'type' => session('type', 'User'),
     ])
-
     <main class="main-content">
         <div class="container">
-            <!-- Announcement Banner -->
             <div class="announcement-banner fade-in">
                 <div class="marquee-wrapper">
                     <div class="marquee-container">
                         <div class="marquee-content">
-                            <span class="announcement-item">🚀 Current Session: {{session('currentSession')}}</span>
-                            <span class="announcement-item">🏛️ Session Start: {{session('startDate')}}</span>
-                            <span class="announcement-item">🎓 Session End: {{session('endDate')}}</span>
+                            <span class="announcement-item">🚀 Current Session: {{ session('currentSession') }}</span>
+                            <span class="announcement-item">🏛️ Session Start: {{ session('startDate') }}</span>
+                            <span class="announcement-item">🎓 Session End: {{ session('endDate') }}</span>
                             <span class="announcement-item">📢 Students Week Soon</span>
                             <span class="announcement-item">📝 Mids: 25 March 2025</span>
                         </div>
                         <div class="marquee-content">
-                            <span class="announcement-item">🚀 Current Session: {{session('currentSession')}}</span>
-                            <span class="announcement-item">🏛️ Session Start: {{session('startDate')}}</span>
-                            <span class="announcement-item">🎓 Session End: {{session('endDate')}}</span>
+                            <span class="announcement-item">🚀 Current Session: {{ session('currentSession') }}</span>
+                            <span class="announcement-item">🏛️ Session Start: {{ session('startDate') }}</span>
+                            <span class="announcement-item">🎓 Session End: {{ session('endDate') }}</span>
                             <span class="announcement-item">📢 New Student Portal Live!</span>
                             <span class="announcement-item">📝 Exam Forms Due Soon</span>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Stats Overview -->
             <div class="dashboard-grid">
                 <div class="col-span-3 col-md-6 col-xs-12 fade-in delay-100">
                     <div class="card">
@@ -657,7 +688,7 @@
                             <div class="card-icon blue">📚</div>
                         </div>
                         <div class="card-body">
-                            <div class="stat-value">{{session('course_count')}}</div>
+                            <div class="stat-value">{{ session('course_count') }}</div>
                             <div class="stat-label">Total Courses in System</div>
                         </div>
                     </div>
@@ -670,7 +701,7 @@
                             <div class="card-icon green">📝</div>
                         </div>
                         <div class="card-body">
-                            <div class="stat-value">{{session('offer_count')}}</div>
+                            <div class="stat-value">{{ session('offer_count') }}</div>
                             <div class="stat-label">Courses This Session</div>
                         </div>
                     </div>
@@ -683,7 +714,7 @@
                             <div class="card-icon orange">👨‍🎓</div>
                         </div>
                         <div class="card-body">
-                            <div class="stat-value">{{session('student_count')}}</div>
+                            <div class="stat-value">{{ session('student_count') }}</div>
                             <div class="stat-label">Registered Students</div>
                         </div>
                     </div>
@@ -696,14 +727,12 @@
                             <div class="card-icon red">👨‍🏫</div>
                         </div>
                         <div class="card-body">
-                            <div class="stat-value">{{session('faculty_count')}}</div>
+                            <div class="stat-value">{{ session('faculty_count') }}</div>
                             <div class="stat-label">Teaching Staff</div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Quick Actions & Activity -->
             <div class="dashboard-grid">
                 <div class="col-span-8 col-md-12 fade-in delay-300">
                     <div class="card">
@@ -712,26 +741,36 @@
                         </div>
                         <div class="card-body">
                             <div class="actions-grid">
-                                <a href="{{route('send.notification')}}" class="action-btn" onclick="logFunction('Notifications Viewed');">
-                                    <span class="icon">📨</span>
-                                    <span class="text">Send Notification</span>
-                                </a>
-                                <a href="{{route('all.student')}}" class="action-btn" onclick="logFunction('Students Viewed');">
-                                    <span class="icon">👨‍🎓</span>
+                                <a href="{{ route('all.student') }}" class="action-btn"
+                                    onclick="logFunction('Students Viewed');">
+                                    <span class="icon">🧑‍🎓</span>
                                     <span class="text">View Students</span>
                                 </a>
-                                <a href="{{route('all.course')}}" class="action-btn" onclick="logFunction('Courses Viewed');">
-                                    <span class="icon">📚</span>
-                                    <span class="text">View Courses</span>
-                                </a>
-                                <a href="{{route('all.teacher')}}" class="action-btn" onclick="logFunction('Teachers Viewed');">
-                                    <span class="icon">👨‍🏫</span>
+
+                                <a href="{{ route('all.teacher') }}" class="action-btn"
+                                    onclick="logFunction('Teachers Viewed');">
+                                    <span class="icon">🧑‍🏫</span>
                                     <span class="text">View Teachers</span>
                                 </a>
-                                <a href="{{route('all.junior')}}" class="action-btn" onclick="logFunction('Junior Lecturers Viewed');">
-                                    <span class="icon">👥</span>
+
+                                <a href="{{ route('all.junior') }}" class="action-btn"
+                                    onclick="logFunction('Junior Lecturers Viewed');">
+                                    <span class="icon">👨‍🔬</span>
                                     <span class="text">View Junior Lecturers</span>
                                 </a>
+
+                                <a href="{{ route('all.course') }}" class="action-btn"
+                                    onclick="logFunction('Courses Viewed');">
+                                    <span class="icon">📘</span>
+                                    <span class="text">View Courses</span>
+                                </a>
+
+                                <a href="{{ route('all.course_allocation') }}" class="action-btn"
+                                    onclick="logFunction('Course Allocations');">
+                                    <span class="icon">🗂️</span>
+                                    <span class="text">Course Allocations</span>
+                                </a>
+
                             </div>
                         </div>
                     </div>
@@ -753,7 +792,7 @@
                                         </tr>
                                     </thead>
                                     <tbody id="activity-feed">
-                                        <!-- Activity items will be inserted by JavaScript -->
+
                                     </tbody>
                                 </table>
                             </div>
@@ -761,32 +800,41 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Data Management & Additional Info -->
             <div class="dashboard-grid">
                 <div class="col-span-6 col-md-12 fade-in delay-400">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Data Management</h3>
+                            <h3 class="card-title">Upload And Approvals</h3>
                         </div>
                         <div class="card-body">
                             <div class="actions-grid">
-                                <a href="{{ route('all.grader') }}" class="action-btn" onclick="logFunction('Assign Graders');">
-                                    <span class="icon">👨‍🏫</span>
-                                    <span class="text">Assign Graders</span>
+
+                                <a href="{{ route('all.grader') }}" class="action-btn"
+                                    onclick="logFunction('Assign Graders');">
+                                    <span class="icon">🧑‍🏫</span>
+                                    <span class="text">Manage Graders</span>
                                 </a>
-                                <a href="{{route('show.timetable')}}" class="action-btn" onclick="logFunction('Timetable Uploaded');">
-                                    <span class="icon">📅</span>
-                                    <span class="text">Upload Timetable</span>
+
+                                <a href="{{ route('all.Graders') }}" class="action-btn"
+                                    onclick="logFunction('View Archives');">
+                                    <span class="icon">📥</span>
+                                    <span class="text">Requested Graders (Demands)</span>
                                 </a>
-                                <a href="{{route('full.timetable')}}" class="action-btn" onclick="logFunction('TimeTable Viewed');">
-                                    <span class="icon">📊</span>
+
+                                <a href="{{ route('full.timetable') }}" class="action-btn"
+                                    onclick="logFunction('TimeTable Viewed');">
+                                    <span class="icon">📆</span>
                                     <span class="text">View Timetable</span>
                                 </a>
-                                <a href="{{route('show.excel_excludedDays')}}" class="action-btn" onclick="logFunction('Added Excluded days');">
-                                    <span class="icon">🚫</span>
-                                    <span class="text">Add Excluded Days</span>
+
+                                <a href="{{ route('show.timetable') }}" class="action-btn"
+                                    onclick="logFunction('Timetable Uploaded');">
+                                    <span class="icon">🗓️</span>
+                                    <span class="text">Upload Timetable</span>
                                 </a>
+
+
+
                             </div>
                         </div>
                     </div>
@@ -799,22 +847,26 @@
                         </div>
                         <div class="card-body">
                             <div class="actions-grid">
-                                <a href="{{route('all.session')}}" class="action-btn" onclick="logFunction('Sessions Viewed');">
+                                <a href="{{ route('all.session') }}" class="action-btn"
+                                    onclick="logFunction('Sessions Viewed');">
                                     <span class="icon">📅</span>
                                     <span class="text">View Session</span>
                                 </a>
-                                <a href="{{route('all.Graders')}}" class="action-btn" onclick="logFunction('View Archives');">
-                                    <span class="icon">👨‍🏫</span>
-                                    <span class="text">Grader Requests</span>
+                                <a href="{{ route('show.excel_excludedDays') }}" class="action-btn"
+                                    onclick="logFunction('Added Excluded days');">
+                                    <span class="icon">🚫</span>
+                                    <span class="text">Add Excluded Days</span>
                                 </a>
-                                <a href="{{route('all.course_allocation')}}" class="action-btn" onclick="logFunction('Course Allocations');">
-                                    <span class="icon">📊</span>
-                                    <span class="text">Course Allocations</span>
+
+                                <a href="{{ route('send.notification') }}" class="action-btn"
+                                    onclick="logFunction('Notifications Viewed');">
+                                    <span class="icon">📨</span>
+                                    <span class="text">Send Notification</span>
                                 </a>
-                                <a href="{{route('add.admin')}}" class="action-btn" onclick="logFunction('Add Admin');">
+                                {{-- <a href="{{route('add.admin')}}" class="action-btn" onclick="logFunction('Add Admin');">
                                     <span class="icon">👤</span>
                                     <span class="text">Add Admin</span>
-                                </a>
+                                </a> --}}
                             </div>
                         </div>
                     </div>
@@ -833,7 +885,7 @@
     </footer>
 
     <script>
-        // Activity Log
+       
         let callLog = [];
         const MAX_LOG_ENTRIES = 6;
 
@@ -845,7 +897,10 @@
 
             callLog.unshift({
                 name: actionName,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                time: new Date().toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
             });
 
             if (callLog.length > MAX_LOG_ENTRIES) {
@@ -855,13 +910,27 @@
             updateActivityFeed();
         }
 
-        // Initial sample activity data
-        const activities = [
-            { action: "New student registered", time: "Just now" },
-            { action: "Course updated", time: "5 minutes ago" },
-            { action: "Notification sent", time: "30 minutes ago" },
-            { action: "System backup completed", time: "2 hours ago" },
-            { action: "New teacher added", time: "5 hours ago" }
+       
+        const activities = [{
+                action: "New student registered",
+                time: "Just now"
+            },
+            {
+                action: "Course updated",
+                time: "5 minutes ago"
+            },
+            {
+                action: "Notification sent",
+                time: "30 minutes ago"
+            },
+            {
+                action: "System backup completed",
+                time: "2 hours ago"
+            },
+            {
+                action: "New teacher added",
+                time: "5 hours ago"
+            }
         ];
 
         function updateActivityFeed() {
@@ -873,11 +942,12 @@
                 </tr>
             `).join('');
         }
-
-        // Function to add a new activity (simulating real-time updates)
         function addNewActivity(action) {
             const now = new Date();
-            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const timeString = now.toLocaleTimeString([], {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
 
             callLog.unshift({
                 name: action,
@@ -890,10 +960,8 @@
 
             updateActivityFeed();
         }
-
-        // Initialize the activity feed
         document.addEventListener('DOMContentLoaded', function() {
-            // Populate initial activity feed
+           
             activities.forEach(activity => {
                 callLog.push({
                     name: activity.action,
@@ -901,8 +969,6 @@
                 });
             });
             updateActivityFeed();
-
-            // Handle navbar toggle
             const navbarToggler = document.querySelector('.navbar-toggler');
             const navbarCollapse = document.querySelector('.navbar-collapse');
 
@@ -911,8 +977,6 @@
                     navbarCollapse.classList.toggle('show');
                 });
             }
-
-            // Initialize animations
             const fadeElements = document.querySelectorAll('.fade-in');
             fadeElements.forEach(el => {
                 el.style.opacity = '0';
@@ -924,7 +988,6 @@
                 });
             }, 100);
 
-            // Simulate real-time updates
             setInterval(() => {
                 const sampleActions = [
                     "New login detected",
@@ -935,8 +998,9 @@
                 ];
                 const randomAction = sampleActions[Math.floor(Math.random() * sampleActions.length)];
                 addNewActivity(randomAction);
-            }, 30000); // Update every 30 seconds
+            }, 30000);
         });
     </script>
 </body>
+
 </html>

@@ -271,6 +271,7 @@
 
     <script>
         let API_BASE_URL = "http://192.168.0.110:8000/";
+         const programId = "{{ session('program_id') }}";
         let allSessions = [];
         let allCourses = [];
         let groupedCourses = {};
@@ -297,8 +298,8 @@
                 
                 // Load sessions and courses
                 const [sessionsResponse, coursesResponse] = await Promise.all([
-                    fetch(`${API_BASE_URL}api/Dropdown/AllOfferedCourse`),
-                    fetch(`${API_BASE_URL}api/Insertion/AllLimitRecord`)
+                    fetch(`${API_BASE_URL}api/Dropdown/Program/AllOfferedCourse/${programId}`),
+                    fetch(`${API_BASE_URL}api/Insertion/AllLimitRecord/${programId}`)
                 ]);
                 
                 const sessionsData = await sessionsResponse.json();

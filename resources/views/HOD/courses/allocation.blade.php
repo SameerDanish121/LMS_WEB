@@ -399,6 +399,7 @@
     <script>
         // API Configuration
         let API_BASE_URL = "http://192.168.0.107:8000/";
+          const programId = "{{ session('program_id') }}";
         async function getApiBaseUrl() {
             try {
                 let response = await fetch('/get-api-url');
@@ -464,7 +465,7 @@
             showLoading();
             try {
                 API_BASE_URL = await getApiBaseUrl();
-                const response = await fetch(`${API_BASE_URL}api/Hod/allocation/history`);
+                const response = await fetch(`${API_BASE_URL}api/Hod/allocation/history/${programId}`);
 
                 if (!response.ok) throw new Error('Network response was not ok');
 

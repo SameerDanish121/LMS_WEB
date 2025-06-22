@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,15 @@
     @vite('resources/css/app.css')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+          .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+            margin: 0 2px;
+        }
         /* Base styles */
         .table-container {
             width: 100%;
@@ -18,28 +28,37 @@
             border-collapse: collapse;
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
 
         th {
-            background-color: #3b82f6; /* Blue-500 */
+            background-color: #3b82f6;
+            /* Blue-500 */
             color: white;
         }
 
         tr:hover {
-            background-color: #f9fafb; /* Gray-50 */
+            background-color: #f9fafb;
+            /* Gray-50 */
         }
 
         /* Mobile-first responsive styles */
         @media (max-width: 768px) {
             .table-container {
-                overflow-x: hidden; /* Prevent horizontal scrolling */
+                overflow-x: hidden;
+                /* Prevent horizontal scrolling */
             }
 
-            table, thead, tbody, th, td, tr {
+            table,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
                 display: block;
             }
 
@@ -101,10 +120,59 @@
                 gap: 0.5rem;
             }
 
-            .search-container input, .search-container button {
+            .search-container input,
+            .search-container button {
                 width: 100%;
             }
         }
+         .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s;
+            margin: 0 2px;
+        }
+
+        .view-btn {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .edit-btn {
+            background-color: #f59e0b;
+            color: white;
+        }
+
+        /* Top action buttons */
+        .top-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .top-actions button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .add-btn {
+            background-color: #10b981;
+            color: white;
+        }
+
+        .bulk-add-btn {
+            background-color: #6366f1;
+            color: white;
+        }
+
     </style>
     <script>
         let courses = [];
@@ -159,7 +227,8 @@
             tableBody.innerHTML = "";
 
             if (filteredCourses.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-500">No courses found.</td></tr>';
+                tableBody.innerHTML =
+                    '<tr><td colspan="7" class="text-center py-4 text-gray-500">No courses found.</td></tr>';
                 return;
             }
 
@@ -176,21 +245,34 @@
                     </tr>`;
             });
         }
-// <td class="px-4 py-2" data-label="Action">
-                        //     <button onclick="viewDetails(${course.id})" class="bg-blue-500 text-white px-3 py-1 rounded">Update</button>
-                        // </td>
+        // <td class="px-4 py-2" data-label="Action">
+        //     <button onclick="viewDetails(${course.id})" class="bg-blue-500 text-white px-3 py-1 rounded">Update</button>
+        // </td>
         document.addEventListener("DOMContentLoaded", loadCourses);
     </script>
 </head>
-<body class="bg-gray-100">
-    
-        @include('HOD.partials.profile_panel')
-    <div class="container mx-auto px-4 py-6">
-        <h2 class="text-2xl sm:text-3xl font-bold text-blue-700 text-center mb-4">Course List</h2>
 
+<body class="bg-gray-100">
+
+    @include('HOD.partials.profile_panel')
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center mb-4 flex-wrap gap-4">
+            <h2 class="text-2xl sm:text-3xl font-bold text-blue-700">Course List</h2>
+            <div class="top-actions">
+                <button class="add-btn" onclick="window.location.href='{{ route('hod.courses.add') }}'">
+                    📝 Add Course
+                </button>
+                <button class="bulk-add-btn"
+                    onclick="window.location.href='{{ route('hod.courses.add_course_excel') }}'">
+                    📁 Bulk Upload
+                </button>
+            </div>
+        </div>
         <div class="mb-4 flex flex-col sm:flex-row justify-center items-center gap-4 search-container">
-            <input type="text" id="search-name" class="border p-2 w-full sm:w-96" oninput="searchCourses()" placeholder="Search by Course Name">
-            <input type="text" id="search-code" class="border p-2 w-full sm:w-96" oninput="searchCourses()" placeholder="Search by Course Code">
+            <input type="text" id="search-name" class="border p-2 w-full sm:w-96" oninput="searchCourses()"
+                placeholder="Search by Course Name">
+            <input type="text" id="search-code" class="border p-2 w-full sm:w-96" oninput="searchCourses()"
+                placeholder="Search by Course Code">
             <button onclick="resetSearch()" class="bg-gray-500 text-white px-4 py-2 rounded">Refresh</button>
         </div>
 
@@ -217,5 +299,5 @@
     </div>
     @include('components.loader')
 </body>
-</html>
 
+</html>

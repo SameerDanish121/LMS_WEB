@@ -14,14 +14,14 @@
             max-width: 400px;
             width: 100%;
             margin: 0 auto;
-            /* Reduced height to prevent excessive space */
+          
             max-height: 300px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* Negative margin to pull the card up */
+       
         .card-container {
             margin-top: -2rem;
         }

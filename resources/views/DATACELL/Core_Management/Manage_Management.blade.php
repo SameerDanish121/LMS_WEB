@@ -300,16 +300,16 @@
         <h2 class="text-2xl sm:text-3xl font-bold text-blue-700 mb-4">Manage Management Staff</h2>
 
         <div class="top-actions">
-            <button class="add-admin-btn" onclick="window.location.href='#'">
+            <button class="add-admin-btn" onclick="window.location.href='{{ route('datacell.add.admin') }}'">
                 📝 Add Admin
             </button>
-            <button class="add-datacell-btn" onclick="window.location.href='#'">
+            <button class="add-datacell-btn" onclick="window.location.href='{{ route('datacell.add.datacell') }}'">
                 📝 Add Datacell
             </button>
-            <button class="add-hod-btn" onclick="window.location.href='#'">
+            <button class="add-hod-btn" onclick="window.location.href='{{ route('datacell.add.hod') }}'">
                 📝 Add HOD
             </button>
-            <button class="add-director-btn" onclick="window.location.href='#'">
+            <button class="add-director-btn" onclick="window.location.href='{{ route('datacell.add.director') }}'">
                 📝 Add Director
             </button>
         </div>

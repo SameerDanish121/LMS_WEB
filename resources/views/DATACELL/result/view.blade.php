@@ -19,8 +19,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .modal-overlay {
@@ -82,6 +87,7 @@
             .desktop-table {
                 display: none;
             }
+
             .result-card {
                 display: block;
             }
@@ -91,6 +97,7 @@
             .desktop-table {
                 display: block;
             }
+
             .result-card {
                 display: none;
             }
@@ -159,6 +166,14 @@
 
         <div class="mb-6 p-4 bg-white shadow-md rounded-lg">
             <h3 class="text-lg font-semibold text-gray-700 mb-3">Result Filters</h3>
+            <div class="flex justify-end mb-4">
+                <button onclick="window.location.href='{{ route('datacell.add.result_excel') }}'"
+                    class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow">
+                    📤 Upload Result (Excel)
+                </button>
+            </div>
+
+
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <!-- Session Dropdown -->
                 <div>
@@ -171,7 +186,8 @@
                 <!-- Course Dropdown -->
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Course</label>
-                    <select id="course-dropdown" class="border rounded-lg p-2 w-full" onchange="loadSections()" disabled>
+                    <select id="course-dropdown" class="border rounded-lg p-2 w-full" onchange="loadSections()"
+                        disabled>
                         <option value="">Select Course</option>
                     </select>
                 </div>
@@ -179,7 +195,8 @@
                 <!-- Section Dropdown -->
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Section</label>
-                    <select id="section-dropdown" class="border rounded-lg p-2 w-full" onchange="loadResults()" disabled>
+                    <select id="section-dropdown" class="border rounded-lg p-2 w-full" onchange="loadResults()"
+                        disabled>
                         <option value="">Select Section</option>
                     </select>
                 </div>
@@ -200,7 +217,7 @@
                         <p><span class="font-medium">Lab Course:</span> <span id="course-lab"></span></p>
                     </div>
                 </div>
-                
+
                 <div class="mt-4">
                     <h4 class="text-lg font-medium text-gray-700 mb-2">Marks Distribution</h4>
                     <div id="marks-distribution" class="marks-distribution">
@@ -215,18 +232,18 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-1">Student Name</label>
-                        <input type="text" id="search-name" class="border rounded-lg p-2 w-full" 
-                               placeholder="Enter student name" oninput="filterStudents()">
+                        <input type="text" id="search-name" class="border rounded-lg p-2 w-full"
+                            placeholder="Enter student name" oninput="filterStudents()">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-600 mb-1">Registration No</label>
-                        <input type="text" id="search-regno" class="border rounded-lg p-2 w-full" 
-                               placeholder="Enter registration no" oninput="filterStudents()">
+                        <input type="text" id="search-regno" class="border rounded-lg p-2 w-full"
+                            placeholder="Enter registration no" oninput="filterStudents()">
                     </div>
                 </div>
                 <div class="mt-4">
-                    <button onclick="resetStudentSearch()" 
-                            class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                    <button onclick="resetStudentSearch()"
+                        class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
                         Reset Search
                     </button>
                 </div>
@@ -281,37 +298,46 @@
                 <label class="block text-sm font-medium text-gray-600 mb-1">Registration No</label>
                 <input type="text" id="edit-reg-no" class="border rounded-lg p-2 w-full" readonly>
             </div>
-            
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">Mid Marks (Max: <span id="mid-max"></span>)</label>
-                    <input type="number" id="edit-mid" class="border rounded-lg p-2 w-full" min="0" oninput="validateMarkInput(this, 'mid')">
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Mid Marks (Max: <span
+                            id="mid-max"></span>)</label>
+                    <input type="number" id="edit-mid" class="border rounded-lg p-2 w-full" min="0"
+                        oninput="validateMarkInput(this, 'mid')">
                     <div id="mid-error" class="error-message">Cannot exceed maximum marks</div>
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">Final Marks (Max: <span id="final-max"></span>)</label>
-                    <input type="number" id="edit-final" class="border rounded-lg p-2 w-full" min="0" oninput="validateMarkInput(this, 'final')">
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Final Marks (Max: <span
+                            id="final-max"></span>)</label>
+                    <input type="number" id="edit-final" class="border rounded-lg p-2 w-full" min="0"
+                        oninput="validateMarkInput(this, 'final')">
                     <div id="final-error" class="error-message">Cannot exceed maximum marks</div>
                 </div>
             </div>
-            
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">Internal Marks (Max: <span id="internal-max"></span>)</label>
-                    <input type="number" id="edit-internal" class="border rounded-lg p-2 w-full" min="0" oninput="validateMarkInput(this, 'internal')">
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Internal Marks (Max: <span
+                            id="internal-max"></span>)</label>
+                    <input type="number" id="edit-internal" class="border rounded-lg p-2 w-full" min="0"
+                        oninput="validateMarkInput(this, 'internal')">
                     <div id="internal-error" class="error-message">Cannot exceed maximum marks</div>
                 </div>
                 <div id="lab-input-container" class="hidden">
-                    <label class="block text-sm font-medium text-gray-600 mb-1">Lab Marks (Max: <span id="lab-max"></span>)</label>
-                    <input type="number" id="edit-lab" class="border rounded-lg p-2 w-full" min="0" oninput="validateMarkInput(this, 'lab')">
+                    <label class="block text-sm font-medium text-gray-600 mb-1">Lab Marks (Max: <span
+                            id="lab-max"></span>)</label>
+                    <input type="number" id="edit-lab" class="border rounded-lg p-2 w-full" min="0"
+                        oninput="validateMarkInput(this, 'lab')">
                     <div id="lab-error" class="error-message">Cannot exceed maximum marks</div>
                 </div>
             </div>
-            
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Quality Points</label>
-                    <input type="number" id="edit-quality-points" class="border rounded-lg p-2 w-full" min="0">
+                    <input type="number" id="edit-quality-points" class="border rounded-lg p-2 w-full"
+                        min="0">
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Grade</label>
@@ -328,10 +354,9 @@
             <input type="hidden" id="edit-student-offered-course-id">
 
             <div class="flex justify-end space-x-2">
-                <button onclick="closeModal('edit-result-modal')" 
-                        class="bg-gray-500 text-white px-4 py-2 rounded-md">Cancel</button>
-                <button onclick="updateResult()" 
-                        class="bg-blue-500 text-white px-4 py-2 rounded-md">Update</button>
+                <button onclick="closeModal('edit-result-modal')"
+                    class="bg-gray-500 text-white px-4 py-2 rounded-md">Cancel</button>
+                <button onclick="updateResult()" class="bg-blue-500 text-white px-4 py-2 rounded-md">Update</button>
             </div>
             <div id="edit-result-loader" class="loader"></div>
             <div id="edit-result-message" class="mt-2 text-sm hidden"></div>
@@ -369,7 +394,7 @@
                 API_BASE_URL = await getApiBaseUrl();
                 const response = await fetch(`${API_BASE_URL}api/Insertion/result/report`);
                 const data = await response.json();
-                
+
                 if (data.status === "success" && data.data) {
                     allResults = data.data;
                     const sessionDropdown = document.getElementById('session-dropdown');
@@ -478,21 +503,23 @@
             }
 
             const selectedSessionData = allResults.find(session => session.session_name === selectedSession);
-            
+
             if (selectedSessionData && selectedSessionData.courses) {
                 const selectedCourse = selectedSessionData.courses.find(course => course.course_id == selectedCourseId);
 
                 if (selectedCourse && selectedCourse.sections) {
-                    const selectedSection = selectedCourse.sections.find(section => section.section_id == selectedSectionId);
+                    const selectedSection = selectedCourse.sections.find(section => section.section_id ==
+                        selectedSectionId);
 
                     if (selectedSection) {
                         // Set current course and section info
                         currentCourse = selectedCourse;
                         currentSection = selectedSection;
-                        currentHeader = JSON.parse(courseDropdown.options[courseDropdown.selectedIndex].getAttribute('data-result-header'));
+                        currentHeader = JSON.parse(courseDropdown.options[courseDropdown.selectedIndex].getAttribute(
+                            'data-result-header'));
 
                         // Update course info display
-                        document.getElementById('course-title').textContent = 
+                        document.getElementById('course-title').textContent =
                             `${currentCourse.course_code} - ${currentCourse.course_name}`;
                         document.getElementById('course-session').textContent = selectedSession;
                         document.getElementById('course-section').textContent = selectedSection.section_name;
@@ -502,7 +529,7 @@
                         // Update marks distribution
                         const marksDistribution = document.getElementById('marks-distribution');
                         marksDistribution.innerHTML = '';
-                        
+
                         // Add all mark components
                         for (const [key, value] of Object.entries(currentHeader)) {
                             if (key !== 'quality_points' && key !== 'grade') {
@@ -637,10 +664,10 @@
                     if (key !== 'quality_points' && key !== 'grade' && key !== 'total_marks') {
                         const markCell = document.createElement('td');
                         markCell.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center';
-                        
+
                         const markValue = student.result[key] !== null ? student.result[key] : 'Not Added';
                         markCell.textContent = markValue;
-                        
+
                         row.appendChild(markCell);
                     }
                 }
@@ -666,13 +693,13 @@
                 // Action
                 const actionCell = document.createElement('td');
                 actionCell.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center';
-                
+
                 const editButton = document.createElement('button');
                 editButton.className = 'text-blue-600 hover:text-blue-800';
                 editButton.textContent = '✏️ Edit';
                 editButton.onclick = () => openEditResultModal(student);
                 actionCell.appendChild(editButton);
-                
+
                 row.appendChild(actionCell);
 
                 tableBody.appendChild(row);
@@ -751,7 +778,8 @@
 
                 const qpValue = document.createElement('span');
                 qpValue.className = 'field-value';
-                qpValue.textContent = student.result.quality_points !== null ? student.result.quality_points : 'N/A';
+                qpValue.textContent = student.result.quality_points !== null ? student.result.quality_points :
+                    'N/A';
 
                 qpField.appendChild(qpLabel);
                 qpField.appendChild(qpValue);
@@ -793,7 +821,7 @@
             const maxValue = currentHeader[field];
             const value = parseInt(input.value) || 0;
             const errorElement = document.getElementById(`${field}-error`);
-            
+
             if (value > maxValue) {
                 input.classList.add('input-error');
                 errorElement.style.display = 'block';
@@ -807,15 +835,15 @@
 
         function validateAllInputs() {
             let isValid = true;
-            
+
             if (!validateMarkInput(document.getElementById('edit-mid'), 'mid')) isValid = false;
             if (!validateMarkInput(document.getElementById('edit-final'), 'final')) isValid = false;
             if (!validateMarkInput(document.getElementById('edit-internal'), 'internal')) isValid = false;
-            
+
             if ('lab' in currentHeader) {
                 if (!validateMarkInput(document.getElementById('edit-lab'), 'lab')) isValid = false;
             }
-            
+
             return isValid;
         }
 
@@ -823,17 +851,18 @@
             document.getElementById('edit-student-name').value = student.name;
             document.getElementById('edit-reg-no').value = student.regNo;
             document.getElementById('edit-student-offered-course-id').value = student.student_offered_course_id;
-            
+
             // Set max values
             document.getElementById('mid-max').textContent = currentHeader.mid;
             document.getElementById('final-max').textContent = currentHeader.final;
             document.getElementById('internal-max').textContent = currentHeader.internal;
-            
+
             // Set current values or empty if null
             document.getElementById('edit-mid').value = student.result.mid !== null ? student.result.mid : '';
             document.getElementById('edit-final').value = student.result.final !== null ? student.result.final : '';
-            document.getElementById('edit-internal').value = student.result.internal !== null ? student.result.internal : '';
-            
+            document.getElementById('edit-internal').value = student.result.internal !== null ? student.result.internal :
+                '';
+
             // Handle lab field
             const labInputContainer = document.getElementById('lab-input-container');
             if ('lab' in currentHeader) {
@@ -843,16 +872,17 @@
             } else {
                 labInputContainer.classList.add('hidden');
             }
-            
+
             // Set quality points and grade
-            document.getElementById('edit-quality-points').value = student.result.quality_points !== null ? student.result.quality_points : '';
+            document.getElementById('edit-quality-points').value = student.result.quality_points !== null ? student.result
+                .quality_points : '';
             document.getElementById('edit-grade').value = student.result.grade || 'A';
-            
+
             // Clear any previous messages and errors
             document.getElementById('edit-result-message').classList.add('hidden');
             document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
             document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
-            
+
             // Show modal
             document.getElementById('edit-result-modal').style.display = 'flex';
         }
@@ -863,7 +893,7 @@
                 showMessage('edit-result-message', 'Please correct the errors in the form', 'error');
                 return;
             }
-            
+
             const studentOfferedCourseId = document.getElementById('edit-student-offered-course-id').value;
             const mid = document.getElementById('edit-mid').value;
             const final = document.getElementById('edit-final').value;
@@ -871,7 +901,7 @@
             const lab = document.getElementById('edit-lab').value;
             const qualityPoints = document.getElementById('edit-quality-points').value;
             const grade = document.getElementById('edit-grade').value;
-            
+
             // Prepare data for API
             const data = {
                 student_offered_course_id: studentOfferedCourseId,
@@ -881,15 +911,15 @@
                 quality_points: qualityPoints || 0,
                 grade: grade || 'F'
             };
-            
+
             if ('lab' in currentHeader) {
                 data.lab = lab || 0;
             }
-            
+
             try {
                 document.getElementById('edit-result-loader').style.display = 'block';
                 document.getElementById('edit-result-message').classList.add('hidden');
-                
+
                 API_BASE_URL = await getApiBaseUrl();
                 const response = await fetch(`${API_BASE_URL}api/Insertion/update/result`, {
                     method: 'POST',
@@ -898,12 +928,12 @@
                     },
                     body: JSON.stringify(data)
                 });
-                
+
                 const responseData = await response.json();
-                
+
                 if (responseData.status === 'success') {
                     showMessage('edit-result-message', 'Result updated successfully!', 'success');
-                    
+
                     // Reload the data while maintaining current filters
                     setTimeout(async () => {
                         closeModal('edit-result-modal');
@@ -926,23 +956,23 @@
                 API_BASE_URL = await getApiBaseUrl();
                 const response = await fetch(`${API_BASE_URL}api/Insertion/result/report`);
                 const data = await response.json();
-                
+
                 if (data.status === "success" && data.data) {
                     allResults = data.data;
-                    
+
                     // Reapply current filters
                     if (currentFilters.session) {
                         document.getElementById('session-dropdown').value = currentFilters.session;
                         loadCourses();
-                        
+
                         if (currentFilters.course) {
                             document.getElementById('course-dropdown').value = currentFilters.course;
                             loadSections();
-                            
+
                             if (currentFilters.section) {
                                 document.getElementById('section-dropdown').value = currentFilters.section;
                                 loadResults();
-                                
+
                                 // Reapply search filters if any
                                 if (currentFilters.searchName || currentFilters.searchRegNo) {
                                     document.getElementById('search-name').value = currentFilters.searchName;
@@ -964,7 +994,7 @@
         function filterStudents() {
             const nameSearch = document.getElementById('search-name').value.toLowerCase();
             const regNoSearch = document.getElementById('search-regno').value.toLowerCase();
-            
+
             currentFilters.searchName = nameSearch;
             currentFilters.searchRegNo = regNoSearch;
 
@@ -1011,7 +1041,7 @@
             const element = document.getElementById(elementId);
             element.textContent = message;
             element.classList.remove('hidden');
-            
+
             if (type === 'success') {
                 element.className = element.className.replace(/text-red-500/g, '') + ' text-green-500';
             } else {

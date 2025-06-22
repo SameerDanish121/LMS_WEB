@@ -198,6 +198,84 @@
             font-size: 0.9rem;
             opacity: 0.9;
         }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out forwards;
+        }
+
+        .notification-success {
+            background-color: #10b981;
+        }
+
+        .notification-error {
+            background-color: #ef4444;
+        }
+
+        .notification-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        /* Loader styles */
+        .loader-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none; /* Changed from flex to none */
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        .loader-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3b82f6;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 @php
@@ -208,19 +286,20 @@ $userId = session('userId', '');
 $userType = session('userType', 'User');
 $email = session('email', '');
 $phoneNumber = session('phoneNumber', '');
+$directorId = session('Id', '');
 @endphp
 <body>
     <!-- Top Bar -->
-     <div class="sticky-top-container">
-    <div class="sticky-top-bar">
-        <div class="flex items-center">
-            <a href="{{ route('director.dashboard') }}" class="text-xl font-bold text-blue-600">
-                Director <span class="hidden sm:inline"></span>
-            </a>
+    <div class="sticky-top-container">
+        <div class="sticky-top-bar">
+            <div class="flex items-center">
+                <a href="{{ route('director.dashboard') }}" class="text-xl font-bold text-blue-600">
+                    Director <span class="hidden sm:inline"></span>
+                </a>
+            </div>
+            @include('DIRECTOR.Profile')
         </div>
-        @include('DIRECTOR.Profile')
     </div>
-</div>
 
     <!-- Main Content -->
     <div class="main-container">
@@ -249,11 +328,6 @@ $phoneNumber = session('phoneNumber', '');
                         <div class="form-group">
                             <label class="form-label">Email Address</label>
                             <input type="email" id="email" value="{{ $email }}" class="form-control" placeholder="Enter your email address">
-                        </div>
-                        
-                        <div class="form-group">
-                            <label class="form-label">Phone Number</label>
-                            <input type="text" id="phoneNumber" value="{{ $phoneNumber }}" class="form-control" placeholder="Enter your phone number">
                         </div>
                         
                         <div class="form-group">
@@ -288,9 +362,13 @@ $phoneNumber = session('phoneNumber', '');
         </div>
     </footer>
 
-    @include('components.loader')
-    
+    <!-- Loader Overlay - Initially hidden -->
+    <div id="loaderOverlay" class="loader-overlay">
+        <div class="loader-spinner"></div>
+    </div>
+
     <script>
+        // Image preview and upload handling
         function previewImage(event) {
             const image = document.getElementById('profilePreview');
             const file = event.target.files[0];
@@ -307,74 +385,113 @@ $phoneNumber = session('phoneNumber', '');
             document.getElementById('profileImageInput').click();
         }
 
+        // Show/hide loader
+        function showLoader() {
+            document.getElementById('loaderOverlay').style.display = 'flex';
+        }
+
+        function hideLoader() {
+            document.getElementById('loaderOverlay').style.display = 'none';
+        }
+
+        // Show notification
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <span class="notification-icon">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                </span>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out forwards';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Form submission
         document.addEventListener("DOMContentLoaded", function() {
-            let API_BASE_URL = "http://127.0.0.1:8000/";
-            async function getApiBaseUrl() {
-                try {
-                    let response = await fetch('/get-api-url');
-                    let data = await response.json();
-                    return data.api_base_url;
-                } catch (error) {
-                    return API_BASE_URL;
-                }
-            }
-            API_BASE_URL = getApiBaseUrl();
+            // Ensure loader is hidden when page loads
+            hideLoader();
+
             document.getElementById("updateProfileForm").addEventListener("submit", async function(event) {
                 event.preventDefault();
                 showLoader();
-                API_BASE_URL=await getApiBaseUrl();
-                let formData = new FormData();
-                let userId = "{{ session('userId') }}";
-                let role = "{{ session('userType') }}";
-                let id="{{session('Id')}}";
-                formData.append("id", id);
-                formData.append("role", role);
-                formData.append("name", document.getElementById("username").value.trim());
-                formData.append("phone_number", document.getElementById("phoneNumber").value.trim());
-                formData.append("Designation", document.getElementById("designation").value.trim());
-                let email = document.getElementById("email").value.trim();
-                let password = document.getElementById("password").value.trim();
-                if (email) formData.append("email", email);
-                if (password) formData.append("password", password);
-                let imageInput = document.getElementById("profileImageInput");
-                if (imageInput.files.length > 0) {
-                    formData.append("image", imageInput.files[0]);
-                }
+                
                 try {
-                    let response = await fetch(`${API_BASE_URL}api/Insertion/update-single-user`, {
-                        method: "POST"
-                        , body: formData
-                    });
-                    let result = await response.json();
-                    if (response.ok) {
-                        sessionStorage.setItem("profileImage", result['image']);
-                        sessionStorage.setItem("username", result['name']);
-                        sessionStorage.setItem("phoneNumber", result['phone']);
-                        sessionStorage.setItem("designation", result['designation']);
-                        sessionStorage.setItem("usernames", result['username']);
-                        hideLoader();
-                        
-                        // Enhanced success notification
-                        const successNotification = document.createElement('div');
-                        successNotification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-bounce';
-                        successNotification.innerHTML = '<i class="fas fa-check-circle mr-2"></i> Profile updated successfully!';
-                        document.body.appendChild(successNotification);
-                        
-                        setTimeout(() => {
-                            successNotification.remove();
-                            location.reload();
-                        }, 2000);
-                    } else {
-                        hideLoader();
-                        alert("⚠️ Failed to update profile: " + result.message);
+                    const API_BASE_URL = await getApiBaseUrl();
+                    const formData = new FormData();
+                    const directorId = "{{ $directorId }}";
+                    
+                    // Append editable fields
+                    formData.append("name", document.getElementById("username").value.trim());
+                    formData.append("designation", document.getElementById("designation").value.trim());
+                    
+                    const email = document.getElementById("email").value.trim();
+                    const password = document.getElementById("password").value.trim();
+                    
+                    if (email) formData.append("email", email);
+                    if (password) formData.append("password", password);
+                    
+                    const imageInput = document.getElementById("profileImageInput");
+                    if (imageInput.files.length > 0) {
+                        formData.append("image", imageInput.files[0]);
                     }
+                    
+                    const response = await fetch(`${API_BASE_URL}api/Insertion/director/update/${directorId}`, {
+                        method: "POST",
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(result.message || 'Failed to update profile');
+                    }
+                    
+                    // Update session data in frontend
+                    if (result.director) {
+                        if (result.director.image) {
+                            sessionStorage.setItem("profileImage", result.director.image);
+                        }
+                        if (result.director.name) {
+                            sessionStorage.setItem("username", result.director.name);
+                        }
+                        if (result.director.designation) {
+                            sessionStorage.setItem("designation", result.director.designation);
+                        }
+                    }
+                    
+                    hideLoader();
+                    showNotification('Profile updated successfully!');
+                    
+                    // Reload after 2 seconds to reflect changes
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                    
                 } catch (error) {
                     hideLoader();
-                    console.error("❌ Error updating profile:", error);
-                    alert("⚠️ An unexpected error occurred. Please try again." + error);
+                    console.error("Error updating profile:", error);
+                    showNotification(error.message || 'An error occurred while updating your profile', 'error');
                 }
             });
         });
+
+        // Get API base URL
+        async function getApiBaseUrl() {
+            try {
+                let response = await fetch('/get-api-url');
+                let data = await response.json();
+                return data.api_base_url || "http://127.0.0.1:8000/";
+            } catch (error) {
+                return "http://127.0.0.1:8000/";
+            }
+        }
     </script>
 </body>
 </html>

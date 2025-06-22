@@ -7,7 +7,6 @@
     @vite('resources/css/app.css')
 
     <style>
-        /* Base styles */
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
@@ -27,8 +26,6 @@
             letter-spacing: -0.025em;
             margin-bottom: 1.5rem;
         }
-        
-        /* Sticky top bar styling */
         .sticky-top-container {
             position: sticky;
             top: 0;
@@ -36,7 +33,6 @@
             background-color: white;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
-        
         .sticky-top-bar {
             display: flex;
             justify-content: space-between;
@@ -596,77 +592,94 @@
         }
 
         // Load enrollments for a student
-        async function loadEnrollments(studentId) {
-            try {
-                // Show loading states
-                document.getElementById('current-enrollments').innerHTML = 
-                    '<div class="flex justify-center items-center h-20"><div class="loading-spinner"></div></div>';
-                document.getElementById('previous-enrollments').innerHTML = 
-                    '<div class="flex justify-center items-center h-20"><div class="loading-spinner"></div></div>';
-                
-                // Fetch current enrollments
-                const currentResponse = await fetch(`${API_BASE_URL}api/Students/getActiveEnrollments?student_id=${studentId}`);
-                const currentData = await currentResponse.json();
-                
-                // Fetch previous enrollments
-                const previousResponse = await fetch(`${API_BASE_URL}api/Students/getPreviousEnrollments?student_id=${studentId}`);
-                const previousData = await previousResponse.json();
-                
-                // Render enrollments
-                renderEnrollments(currentData, previousData);
-            } catch (error) {
-                console.error("Error fetching enrollments:", error);
-                document.getElementById('current-enrollments').innerHTML = 
-                    '<p class="text-red-500">Error loading current enrollments</p>';
-                document.getElementById('previous-enrollments').innerHTML = 
-                    '<p class="text-red-500">Error loading previous enrollments</p>';
-            }
-        }
+    async function loadEnrollments(studentId) {
+    try {
+        // Show loading states
+        document.getElementById('current-enrollments').innerHTML = 
+            '<div class="flex justify-center items-center h-20"><div class="loading-spinner"></div></div>';
+        document.getElementById('previous-enrollments').innerHTML = 
+            '<div class="flex justify-center items-center h-20"><div class="loading-spinner"></div></div>';
+        
+        // Fetch all enrollments in a single call
+        const response = await fetch(`${API_BASE_URL}api/Students/getAllEnrollments?student_id=${studentId}`);
+        const data = await response.json();
+        
+        // Render enrollments
+        renderEnrollments(data);
+    } catch (error) {
+        console.error("Error fetching enrollments:", error);
+        document.getElementById('current-enrollments').innerHTML = 
+            '<p class="text-red-500">Error loading enrollments</p>';
+        document.getElementById('previous-enrollments').innerHTML = 
+            '<p class="text-red-500">Error loading enrollments</p>';
+    }
+}
 
-        function renderEnrollments(currentData, previousData) {
-            // Render current enrollments
-            const currentContainer = document.getElementById('current-enrollments');
-            if (currentData.success && currentData.CurrentCourses && currentData.CurrentCourses.length > 0) {
-                currentContainer.innerHTML = `
+ function renderEnrollments(data) {
+    // Render current enrollments
+    const currentContainer = document.getElementById('current-enrollments');
+    if (data.success && data.CurrentCourses && data.CurrentCourses.length > 0) {
+        currentContainer.innerHTML = `
+            <ul class="enrollment-list">
+                ${data.CurrentCourses.map(course => `
+                    <li class="enrollment-item">
+                        <span class="enrollment-course">${course.course_name || 'N/A'} (${course.course_code || 'N/A'})</span>
+                        <span class="enrollment-status status-active">Active</span>
+                        <div class="text-sm text-gray-500 mt-1">
+                            Type: ${course.Type || 'N/A'} | 
+                            Credit Hours: ${course.credit_hours || 'N/A'} | 
+                            Section: ${course.section || 'N/A'}
+                        </div>
+                        ${course.teacher_name ? `<div class="text-sm text-gray-500">Teacher: ${course.teacher_name}</div>` : ''}
+                    </li>
+                `).join('')}
+            </ul>
+        `;
+    } else {
+        currentContainer.innerHTML = '<p class="text-gray-500">No current enrollments found</p>';
+    }
+    
+    // Render previous enrollments
+    const previousContainer = document.getElementById('previous-enrollments');
+    if (data.success && data.PreviousCourses && Object.keys(data.PreviousCourses).length > 0) {
+        let previousHtml = '';
+        
+        // Loop through each session in PreviousCourses
+        for (const [session, courses] of Object.entries(data.PreviousCourses)) {
+            previousHtml += `
+                <div class="mb-4">
+                    <h5 class="font-medium text-gray-700 mb-2">${session}</h5>
                     <ul class="enrollment-list">
-                        ${currentData.CurrentCourses.map(course => `
+                        ${courses.map(course => `
                             <li class="enrollment-item">
-                                <span class="enrollment-course">${course.course_name || course.name || 'N/A'}</span>
-                                <span class="enrollment-status status-active">Active</span>
+                                <span class="enrollment-course">${course.course_name || 'N/A'} (${course.course_code || 'N/A'})</span>
+                                <span class="enrollment-status ${course.grade === 'F' ? 'bg-red-100 text-red-800' : 'status-completed'}">
+                                    ${course.grade || 'N/A'}
+                                </span>
                                 <div class="text-sm text-gray-500 mt-1">
-                                    ${course.enrollment_date ? `Enrolled: ${formatDate(course.enrollment_date)}` : ''}
-                                    ${course.grade ? ` | Grade: ${course.grade}` : ''}
+                                    Type: ${course.Type || 'N/A'} | 
+                                    Credit Hours: ${course.credit_hours || 'N/A'} | 
+                                    Section: ${course.section || 'N/A'}
                                 </div>
+                                ${course.result_info && typeof course.result_info === 'object' ? `
+                                    <div class="text-sm text-gray-500">
+                                        Mid: ${course.result_info.mid || 'N/A'} | 
+                                        Final: ${course.result_info.final || 'N/A'} | 
+                                        Lab: ${course.result_info.lab || 'N/A'}
+                                    </div>
+                                ` : ''}
                             </li>
                         `).join('')}
                     </ul>
-                `;
-            } else {
-                currentContainer.innerHTML = '<p class="text-gray-500">No current enrollments found</p>';
-            }
-            
-            // Render previous enrollments
-            const previousContainer = document.getElementById('previous-enrollments');
-            const previousCourses = previousData['Course Content'] || previousData.PreviousCourses || [];
-            if ((previousData.success || previousData['Course Content']) && previousCourses.length > 0) {
-                previousContainer.innerHTML = `
-                    <ul class="enrollment-list">
-                        ${previousCourses.map(course => `
-                            <li class="enrollment-item">
-                                <span class="enrollment-course">${course.course_name || course.name || 'N/A'}</span>
-                                <span class="enrollment-status status-completed">Completed</span>
-                                <div class="text-sm text-gray-500 mt-1">
-                                    ${course.completion_date ? `Completed: ${formatDate(course.completion_date)}` : ''}
-                                    ${course.grade ? ` | Grade: ${course.grade}` : ''}
-                                </div>
-                            </li>
-                        `).join('')}
-                    </ul>
-                `;
-            } else {
-                previousContainer.innerHTML = '<p class="text-gray-500">No previous enrollments found</p>';
-            }
+                </div>
+            `;
         }
+        
+        previousContainer.innerHTML = previousHtml;
+    } else {
+        previousContainer.innerHTML = '<p class="text-gray-500">No previous enrollments found</p>';
+    }
+}
 
         function formatDate(dateString) {
             if (!dateString) return '';
@@ -806,8 +819,6 @@
                 closeEnrollmentModal();
             }
         });
-
-        // Close modal with Escape key
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && !document.getElementById('enrollment-modal').classList.contains('hidden')) {
                 closeEnrollmentModal();
@@ -818,8 +829,6 @@
             loadStudents();
             checkMobileView();
             window.addEventListener('resize', checkMobileView);
-            
-            // Add animation to search card
             const searchCard = document.querySelector('.search-card');
             searchCard.classList.add('animate-fade-in');
         });

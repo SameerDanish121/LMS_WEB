@@ -183,9 +183,10 @@
         <h2 class="text-2xl sm:text-3xl font-bold text-blue-700 text-center mb-4">Enrolments Management</h2>
         <!-- Action Buttons -->
        <div class="mb-6 flex flex-wrap gap-4 justify-end">
-    <button id="upload-excel-btn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
-        📤 Upload Enrolments ( Excel )
-    </button>
+    
+     <a href="{{ route('datacell.add.enroll_excel') }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
+         📤 Upload Enrolments ( Excel )
+    </a>
     <button id="offer-course-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
         ➕ Offer New Course
     </button>

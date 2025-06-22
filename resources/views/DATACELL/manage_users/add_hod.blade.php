@@ -28,16 +28,11 @@
                         <label class="block text-base md:text-lg font-semibold">Department</label>
                         <select id="department" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" required>
                             <option value="">Select Department</option>
-                            <option value="Computer Science">Computer Science</option>
-                            <option value="Software Engineering">Software Engineering</option>
-                            <option value="Information Technology">Information Technology</option>
-                            <option value="Artificial Intelligence">Artificial Intelligence</option>
-                            <option value="Data Science">Data Science</option>
-                            <option value="English">English</option>
-                            <option value="Mathematics">Mathematics</option>
-                            <option value="Physics">Physics</option>
-                            <option value="Chemistry">Chemistry</option>
-                            <option value="Business Administration">Business Administration</option>
+                            <option value="BCS">Computer Science</option>
+                            <option value="BSE">Software Engineering</option>
+                            <option value="BIT">Information Technology</option>
+                            <option value="BAI">Artificial Intelligence</option>
+                            
                         </select>
                     </div>
 
@@ -215,8 +210,8 @@
             formData.append("name", name);
             formData.append("department", department);
             formData.append("Designation", designation);
-            if (email) formData.append("email", email); // Add email only if provided
-            if (picture) formData.append("image", picture); // Add image only if provided
+            if (email) formData.append("email", email);
+            if (picture) formData.append("image", picture); 
 
             try {
                 // Send data to the server

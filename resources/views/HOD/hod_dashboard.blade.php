@@ -688,8 +688,7 @@
 
                 </div>
                 <div class="flex flex-col md:flex-row items-center justify-between gap-4 p-4">
-                    <!-- Added p-4 for inner padding -->
-                    <!-- Circular Progress -->
+
                     <div class="relative w-24 h-24 flex-shrink-0">
                         <svg class="w-full h-full" viewBox="0 0 36 36">
                             <!-- Background circle -->
@@ -780,82 +779,48 @@
                             <h3 class="card-title">Quick Actions</h3>
                         </div>
                         <div class="quick-actions">
-                            <!-- Management Section -->
-                            <a href="{{ route('hod.teachers.add') }}" class="action-btn"
-                                onclick="logFunction('Teacher Add');">
-                                <span class="icon">👨‍🏫</span>
-                                <span class="text">Add Teacher</span>
+                            <a href="{{ route('hod.teachers.view') }}" class="action-btn"
+                                onclick="logFunction('Teachers');">
+                                <span class="icon">👩‍🏫</span>
+                                <span class="text">Manage Teachers</span>
                             </a>
-                            <a href="{{ route('hod.juniors.add') }}" class="action-btn"
-                                onclick="logFunction('Junior Lecturer');">
-                                <span class="icon">👨‍🎓</span>
-                                <span class="text">Add Junior Lecturer </span>
+                            <a href="{{ route('hod.juniors.view') }}" class="action-btn"
+                                onclick="logFunction('Juniors');">
+                                <span class="icon">🧑‍🎓</span>
+                                <span class="text">Manage Juniors</span>
                             </a>
-                            <a href="{{ route('hod.courses.add') }}" class="action-btn"
-                                onclick="logFunction('Course Add');">
-                                <span class="icon">📚</span>
-                                <span class="text">Add Course</span>
+                            <a href="{{ route('hod.courses.view') }}" class="action-btn"
+                                onclick="logFunction('Course');">
+                                <span class="icon">📘</span>
+                                <span class="text">Manage Courses</span>
                             </a>
-                            <a href="{{ route('hod.teachers.add_teacher_excel') }}" class="action-btn"
-                                onclick="logFunction('Add Teacher Excel');">
-                                <span class="icon">📊</span>
-                                <span class="text">Add Teacher (Excel)</span>
-                            </a>
-                            <a href="{{ route('hod.juniors.add_junior_excel') }}" class="action-btn"
-                                onclick="logFunction('Add Junior Excel');">
-                                <span class="icon">📊</span>
-                                <span class="text">Add Junior (Excel)</span>
-                            </a>
-                            <a href="{{ route('hod.courses.add_course_excel') }}" class="action-btn"
-                                onclick="logFunction('Add Course Excel');">
-                                <span class="icon">📊</span>
-                                <span class="text">Add Course (Excel)</span>
-                            </a>
-
-                            <!-- Allocation Section -->
                             <a href="{{ route('hod.courses.allocation') }}" class="action-btn"
                                 onclick="logFunction('Course Allocation');">
-                                <span class="icon">📝</span>
-                                <span class="text">Course Allocation</span>
+                                <span class="icon">📋</span>
+                                <span class="text">Manage Course Allocation</span>
                             </a>
-                            <!-- Content Section -->
                             <a href="{{ route('hod.courses.content') }}" class="action-btn"
                                 onclick="logFunction('Course Content');">
                                 <span class="icon">📄</span>
-                                <span class="text">Course Content</span>
+                                <span class="text">Manage Course Content</span>
                             </a>
                             <a href="{{ route('hod.exams.create') }}" class="action-btn"
-                                onclick="logFunction('Exam Creation');">
-                                <span class="icon">📝</span>
-                                <span class="text">Exam Creation</span>
-                            </a>
-                            <a href="{{ route('hod.courses.copy_content') }}" class="action-btn"
-                                onclick="logFunction('Copy Content');">
-                                <span class="icon">📋</span>
-                                <span class="text">Copy Previous Content</span>
-                            </a>
-                            <a href="{{ route('hod.teachers.view') }}" class="action-btn"
-                                onclick="logFunction('View Teachers');">
-                                <span class="icon">👨‍🏫</span>
-                                <span class="text">View Teachers</span>
-                            </a>
-                            <a href="{{ route('hod.juniors.view') }}" class="action-btn"
-                                onclick="logFunction('View Juniors');">
-                                <span class="icon">👨‍🎓</span>
-                                <span class="text">View Juniors</span>
-                            </a>
-                            <a href="{{ route('hod.courses.view') }}" class="action-btn"
-                                onclick="logFunction('View Courses');">
-                                <span class="icon">📚</span>
-                                <span class="text">View Courses</span>
+                                onclick="logFunction('Exam');">
+                                <span class="icon">🧪</span>
+                                <span class="text">Manage Exam</span>
                             </a>
                             <a href="{{ route('Audit_Report') }}" class="action-btn"
-                                onclick="logFunction('View Courses');">
-                                <span class="icon">🔍
-                                </span>
+                                onclick="logFunction('Audit Report');">
+                                <span class="icon">📊</span>
                                 <span class="text">Audit Report</span>
                             </a>
+                            <a href="{{ route('task_limit') }}" class="action-btn"
+                                onclick="logFunction('Task Limit');">
+                                <span class="icon">⏱️</span>
+                                <span class="text">Set Task Limit</span>
+                            </a>
                         </div>
+
                     </div>
                 </div>
 
@@ -920,17 +885,6 @@
                                 <span class="icon">📨</span>
                                 <span class="text">Send Notifications</span>
                             </a>
-                            <a href="{{ route('hod.profile') }}" class="action-btn"
-                                onclick="logFunction('Update Credentials');">
-                                <span class="icon">🔑</span>
-                                <span class="text">Update Credentials</span>
-                            </a>
-                            <a href="{{ route('task_limit') }}" class="action-btn"
-                                onclick="logFunction('Task Limit');">
-                                <span class="icon">📋</span>
-                                <span class="text">Set Task Limit</span>
-                            </a>
-
                         </div>
                     </div>
                 </div>
