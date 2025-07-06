@@ -11,8 +11,6 @@
         .table-container {
             transition: all 0.3s ease-in-out;
         }
-
-        /* Action buttons */
         .action-btn {
             display: inline-flex;
             align-items: center;

@@ -342,26 +342,6 @@ Route::prefix('director')->group(function () {
 });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //-------DONOT TOUCH-----DONOT TOUCH---------COMPLETED--------DONOT TOUCH--------DONOT TOUCH---------DONOT TOUCH---------//
 Route::get('/get-api-url', [ApiController::class, 'getApiUrl']);
 Route::get('/update-api', [ApiController::class, 'updateApiUrl']);
