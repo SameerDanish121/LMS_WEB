@@ -11,9 +11,7 @@ $sections = array_keys($timetable);
     @vite('resources/css/app.css')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <style>
-        /* Base styles */
         body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(to bottom right, #eef2ff, #dbeafe);
@@ -26,7 +24,6 @@ $sections = array_keys($timetable);
         .max-w-6xl {
             max-width: 72rem;
         }
-
         .p-4 {
             padding: 1rem;
         }

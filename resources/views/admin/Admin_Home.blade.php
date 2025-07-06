@@ -832,6 +832,11 @@
                                     <span class="icon">🗓️</span>
                                     <span class="text">Upload Timetable</span>
                                 </a>
+<a href="{{ route('date_sheet') }}" class="action-btn"
+   onclick="logFunction('Viewing Date Sheet');">
+    <span class="icon">📅</span>
+    <span class="text">View Date Sheet</span>
+</a>
 
 
 

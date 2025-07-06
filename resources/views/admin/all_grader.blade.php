@@ -1,4 +1,5 @@
-{{-- <!DOCTYPE html>
+{{--
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -14,7 +15,6 @@
         .search-active .table-container {
             max-width: 80%;
         }
-
     </style>
     <script>
         let graders = [];
@@ -39,10 +39,11 @@
                 API_BASE_URL = await getApiBaseUrl();
                 const response = await fetch(`${API_BASE_URL}api/Admin/grades`);
                 const data = await response.json();
+                console.log('graders info' + data)
                 if (data.Grader) {
                     console.log(data)
                     graders = data.Grader;
- console.log(data)
+                    console.log(data)
                     filteredGraders = [...graders];
                     renderGraders();
                 }
@@ -89,34 +90,39 @@
         }
 
 
-function renderGraders() {
-    const tableBody = document.getElementById("grader-table-body");
-    const mobileContainer = document.getElementById("grader-mobile-container");
+        function renderGraders() {
+            const tableBody = document.getElementById("grader-table-body");
+            const mobileContainer = document.getElementById("grader-mobile-container");
 
-    // Clear both containers
-    tableBody.innerHTML = "";
-    mobileContainer.innerHTML = "";
+            // Clear both containers
+            tableBody.innerHTML = "";
+            mobileContainer.innerHTML = "";
 
-    if (filteredGraders.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-500">No graders found.</td></tr>';
-        mobileContainer.innerHTML = '<div class="text-center py-4 text-gray-500">No graders found.</div>';
-        return;
-    }
+            if (filteredGraders.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-500">No graders found.</td></tr>';
+                mobileContainer.innerHTML = '<div class="text-center py-4 text-gray-500">No graders found.</div>';
+                return;
+            }
 
-    filteredGraders.forEach(grader => {
-        const encodedData = btoa(JSON.stringify(grader.student_id));
-        const studentDetailsUrl = `{{ route('grader.details', ['student_id' => '__PLACEHOLDER__']) }}`.replace('__PLACEHOLDER__', encodedData);
+            // In renderGraders() function:
+            filteredGraders.forEach(grader => {
+                const studentDetailsUrl = `{{ route('grader.details') }}?student_id=${grader.student_id}`;
 
-        // Determine the action button based on status
-        let actionButton;
-        if (grader.status.toLowerCase() === "active") {
-            actionButton = `<a href="${studentDetailsUrl}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">History</a>`;
-        } else {
-            actionButton = `<button onclick="assignGrader(${grader.grader_id}, '${grader.name}','${grader.regNo}','${grader.image}')" class="bg-green-500 text-white px-3 py-1 rounded">Assign</button>`;
-        }
 
-        // Add row to desktop table
-        tableBody.innerHTML += `
+                console.log(`History URL for ${grader.student_id}:`, studentDetailsUrl);
+
+
+
+                let actionButton = `<a href="${studentDetailsUrl}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded mr-2">History</a>`;
+
+                // If the grader is inactive, add the Assign button too
+                if (grader.status.toLowerCase() !== "active") {
+                    actionButton += `<button onclick="assignGrader(${grader.grader_id}, '${grader.name}', '${grader.regNo}', '${grader.image}')" class="bg-green-500 text-white px-3 py-1 rounded">Assign</button>`;
+                }
+
+
+
+                tableBody.innerHTML += `
             <tr class="border-b border-gray-300 text-center hover:bg-gray-50">
                 <td class="px-4 py-2">${grader.name}</td>
                 <td class="px-4 py-2">${grader.status}</td>
@@ -126,8 +132,8 @@ function renderGraders() {
                 </td>
             </tr>`;
 
-        // Add card to mobile container
-        mobileContainer.innerHTML += `
+                // Add card to mobile container
+                mobileContainer.innerHTML += `
             <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
                 <div class="bg-blue-500 text-white px-4 py-2 font-medium text-center">
                     ${grader.name}
@@ -146,101 +152,101 @@ function renderGraders() {
                     <div class="px-4 py-3 flex flex-col space-y-2">
                         <div class="w-full">
                             ${grader.status.toLowerCase() === "active" ?
-                              `<a href="${studentDetailsUrl}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded block text-center">History</a>` :
-                              `<button onclick="assignGrader(${grader.grader_id}, '${grader.name}','${grader.regNo}','${grader.image}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded block text-center w-full">Assign</button>`
-                            }
+                        `<a href="${studentDetailsUrl}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded block text-center">History</a>` :
+                        `<button onclick="assignGrader(${grader.grader_id}, '${grader.name}','${grader.regNo}','${grader.image}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded block text-center w-full">Assign</button>`
+                    }
                         </div>
                     </div>
                 </div>
             </div>`;
-    });
-}
-
-
-async function confirmAssignment() {
-    try {
-        let API_BASE_URL = await getApiBaseUrl();
-        let graderId = document.getElementById("graderId").value;
-        let teacherId = document.getElementById("assignTeacherDropdown").value; // Changed ID here
-
-        if (!teacherId) {
-            alert("Please select a teacher.");
-            return;
-        }
-
-        let requestData = {
-            teacher_id: teacherId,
-            grader_id: graderId
-        };
-
-        let response = await fetch(`${API_BASE_URL}api/Datacells/assign-grader`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(requestData)
-        });
-
-        let data = await response.json();
-
-        if (data.status === "success") {
-            alert(`Success: ${data.message}\nGrader ID: ${data.grader_id}\nTeacher ID: ${data.teacher_id}\nSession ID: ${data.session_id}`);
-            await loadGraders();
-            closeModal();
-        } else if (data.status === "error") {
-            alert(`Error: ${data.message}\nGrader ID: ${data.grader_id}\nSession ID: ${data.session_id}`);
-        } else {
-            alert("Unexpected response from server");
-            console.error(data);
-        }
-    } catch (error) {
-        alert("An unexpected error occurred: " + error.message);
-        console.error(error);
-    }
-}
-
-   async function assignGrader(graderId, name, regNo, imageUrl = null) {
-    document.getElementById("graderName").innerText = name;
-    document.getElementById("graderRegNo").innerText = "RegNo: " + regNo;
-    document.getElementById("graderId").value = graderId;
-
-    let imageElement = document.getElementById("graderImage");
-    let defaultAvatar = document.getElementById("defaultAvatar");
-
-    if (imageUrl) {
-        imageElement.src = imageUrl;
-        imageElement.classList.remove("hidden");
-        defaultAvatar.classList.add("hidden");
-    } else {
-        imageElement.classList.add("hidden");
-        defaultAvatar.classList.remove("hidden");
-    }
-
-    try {
-        API_BASE_URL = await getApiBaseUrl();
-        let response = await fetch(`${API_BASE_URL}api/Dropdown/get-teachers`);
-        let data = await response.json();
-
-        let teacherDropdown = document.getElementById("assignTeacherDropdown"); // Changed ID here
-        teacherDropdown.innerHTML = `<option value="">Select Teacher</option>`;
-
-        if (data && data.length > 0) {
-            data.forEach(teacher => {
-                let option = document.createElement("option");
-                option.value = teacher.id;
-                option.textContent = teacher.name;
-                teacherDropdown.appendChild(option);
             });
-        } else {
-            teacherDropdown.innerHTML = `<option value="">No Teachers Available</option>`;
         }
-    } catch (error) {
-        console.error("Error fetching teachers:", error);
-        alert("Failed to load teachers. Please try again.");
-    }
 
-    document.getElementById("assignModal").classList.remove("hidden");
-}
+
+        async function confirmAssignment() {
+            try {
+                let API_BASE_URL = await getApiBaseUrl();
+                let graderId = document.getElementById("graderId").value;
+                let teacherId = document.getElementById("assignTeacherDropdown").value; // Changed ID here
+
+                if (!teacherId) {
+                    alert("Please select a teacher.");
+                    return;
+                }
+
+                let requestData = {
+                    teacher_id: teacherId,
+                    grader_id: graderId
+                };
+
+                let response = await fetch(`${API_BASE_URL}api/Datacells/assign-grader`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                let data = await response.json();
+
+                if (data.status === "success") {
+                    alert(`Success: ${data.message}\nGrader ID: ${data.grader_id}\nTeacher ID: ${data.teacher_id}\nSession ID: ${data.session_id}`);
+                    await loadGraders();
+                    closeModal();
+                } else if (data.status === "error") {
+                    alert(`Error: ${data.message}\nGrader ID: ${data.grader_id}\nSession ID: ${data.session_id}`);
+                } else {
+                    alert("Unexpected response from server");
+                    console.error(data);
+                }
+            } catch (error) {
+                alert("An unexpected error occurred: " + error.message);
+                console.error(error);
+            }
+        }
+
+        async function assignGrader(graderId, name, regNo, imageUrl = null) {
+            document.getElementById("graderName").innerText = name;
+            document.getElementById("graderRegNo").innerText = "RegNo: " + regNo;
+            document.getElementById("graderId").value = graderId;
+
+            let imageElement = document.getElementById("graderImage");
+            let defaultAvatar = document.getElementById("defaultAvatar");
+
+            if (imageUrl) {
+                imageElement.src = imageUrl;
+                imageElement.classList.remove("hidden");
+                defaultAvatar.classList.add("hidden");
+            } else {
+                imageElement.classList.add("hidden");
+                defaultAvatar.classList.remove("hidden");
+            }
+
+            try {
+                API_BASE_URL = await getApiBaseUrl();
+                let response = await fetch(`${API_BASE_URL}api/Dropdown/get-teachers`);
+                let data = await response.json();
+
+                let teacherDropdown = document.getElementById("assignTeacherDropdown"); // Changed ID here
+                teacherDropdown.innerHTML = `<option value="">Select Teacher</option>`;
+
+                if (data && data.length > 0) {
+                    data.forEach(teacher => {
+                        let option = document.createElement("option");
+                        option.value = teacher.id;
+                        option.textContent = teacher.name;
+                        teacherDropdown.appendChild(option);
+                    });
+                } else {
+                    teacherDropdown.innerHTML = `<option value="">No Teachers Available</option>`;
+                }
+            } catch (error) {
+                console.error("Error fetching teachers:", error);
+                alert("Failed to load teachers. Please try again.");
+            }
+
+            document.getElementById("assignModal").classList.remove("hidden");
+        }
         function closeModal() {
             document.getElementById("assignModal").classList.add("hidden");
         }
@@ -286,71 +292,71 @@ async function confirmAssignment() {
             }
         }
         async function addGrader() {
-    try {
-        let API_BASE_URL = await getApiBaseUrl();
-        let teacherId = document.getElementById("teacherDropdown").value;
-        let studentId = document.getElementById("studentDropdown").value;
-        let sessionId = document.getElementById("sessionDropdown").value;
-        let type = document.getElementById("typeDropdown").value;
+            try {
+                let API_BASE_URL = await getApiBaseUrl();
+                let teacherId = document.getElementById("teacherDropdown").value;
+                let studentId = document.getElementById("studentDropdown").value;
+                let sessionId = document.getElementById("sessionDropdown").value;
+                let type = document.getElementById("typeDropdown").value;
 
-        // Validation
-        if (!teacherId || !studentId || !sessionId) {
-            alert("Please fill in all required fields.");
-            return;
+                // Validation
+                if (!teacherId || !studentId || !sessionId) {
+                    alert("Please fill in all required fields.");
+                    return;
+                }
+
+                let requestData = {
+                    teacher_id: teacherId,
+                    grader_id: studentId,
+                    session_id: sessionId,
+                    type: type || null
+                };
+
+                let response = await fetch(`${API_BASE_URL}api/Datacells/add-grader`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                let data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to add grader');
+                }
+
+                if (data.status === "success") {
+                    alert(`Success: ${data.message || 'Grader added successfully!'}`);
+                    resetAddGraderForm();
+                    document.getElementById("addGraderForm").classList.add("hidden");
+                    await loadGraders();
+                } else {
+                    throw new Error(data.message || parseErrorMessage(data.error));
+                }
+            } catch (error) {
+                console.error('Add Grader Error:', error);
+                alert(`Error: ${error.message}`);
+            }
         }
 
-        let requestData = {
-            teacher_id: teacherId,
-            grader_id: studentId,
-            session_id: sessionId,
-            type: type || null
-        };
+        function parseErrorMessage(error) {
+            if (!error) return "Unknown error occurred";
 
-        let response = await fetch(`${API_BASE_URL}api/Datacells/add-grader`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(requestData)
-        });
+            if (typeof error === 'string') return error;
 
-        let data = await response.json();
+            if (Array.isArray(error)) {
+                return error.join('\n');
+            }
 
-        if (!response.ok) {
-            throw new Error(data.message || 'Failed to add grader');
+            if (typeof error === 'object') {
+                return Object.entries(error)
+                    .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
+                    .join('\n');
+            }
+
+            return "Unexpected error format";
         }
-
-        if (data.status === "success") {
-            alert(`Success: ${data.message || 'Grader added successfully!'}`);
-            resetAddGraderForm();
-            document.getElementById("addGraderForm").classList.add("hidden");
-            await loadGraders();
-        } else {
-            throw new Error(data.message || parseErrorMessage(data.error));
-        }
-    } catch (error) {
-        console.error('Add Grader Error:', error);
-        alert(`Error: ${error.message}`);
-    }
-}
-
-function parseErrorMessage(error) {
-    if (!error) return "Unknown error occurred";
-
-    if (typeof error === 'string') return error;
-
-    if (Array.isArray(error)) {
-        return error.join('\n');
-    }
-
-    if (typeof error === 'object') {
-        return Object.entries(error)
-            .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
-            .join('\n');
-    }
-
-    return "Unexpected error format";
-}
 
         function parseErrorMessage(error) {
             if (typeof error === 'string') {
@@ -395,13 +401,15 @@ function parseErrorMessage(error) {
                 <!-- Search by Grader Name -->
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Grader Name</label>
-                    <input type="text" id="search-name" class="border rounded-lg p-2 w-full" oninput="searchGraders()" placeholder="Enter grader name">
+                    <input type="text" id="search-name" class="border rounded-lg p-2 w-full" oninput="searchGraders()"
+                        placeholder="Enter grader name">
                 </div>
 
                 <!-- Search by Teacher Name -->
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Teacher Name</label>
-                    <input type="text" id="search-teacher" class="border rounded-lg p-2 w-full" oninput="searchGraders()" placeholder="Enter teacher name">
+                    <input type="text" id="search-teacher" class="border rounded-lg p-2 w-full"
+                        oninput="searchGraders()" placeholder="Enter teacher name">
                 </div>
 
                 <!-- Type Filter -->
@@ -413,7 +421,8 @@ function parseErrorMessage(error) {
                             <span class="text-sm text-gray-700">Merit-based</span>
                         </label>
                         <label class="flex items-center space-x-2">
-                            <input type="radio" name="type-filter" value="need-based" onclick="handleTypeFilter(this.value)">
+                            <input type="radio" name="type-filter" value="need-based"
+                                onclick="handleTypeFilter(this.value)">
                             <span class="text-sm text-gray-700">Need-based</span>
                         </label>
                     </div>
@@ -422,7 +431,8 @@ function parseErrorMessage(error) {
                 <!-- Status Filter -->
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Status</label>
-                    <select id="status-filter" class="border rounded-lg p-2 w-full" onchange="handleStatusFilter(this.value)">
+                    <select id="status-filter" class="border rounded-lg p-2 w-full"
+                        onchange="handleStatusFilter(this.value)">
                         <option value="">Select Status</option>
                         <option value="active">Active</option>
                         <option value="in-active">Inactive</option>
@@ -433,9 +443,17 @@ function parseErrorMessage(error) {
                 <button onclick="resetSearch()" class="bg-gray-600 hover:bg-gray-700 text-white px-5 py-2 rounded-lg">
                     Reset Filters
                 </button>
-                <button onclick="openAddGraderForm()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">
-                    Add Grader
-                </button>
+                <div class="btn"> <button onclick="openAddGraderForm()"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">
+                        Add Grader
+                    </button>
+                    <a href="{{ route('show.grader') }}"
+                        class="bg-green-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg inline-block">
+                        Upload Excel
+                    </a>
+
+                </div>
+
             </div>
         </div>
         <div id="addGraderForm" class="hidden mb-6 p-4 bg-white shadow-md rounded-lg">
@@ -525,17 +543,18 @@ function parseErrorMessage(error) {
                 <input type="hidden" id="graderId">
             </div>
 
-           <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">Select Teacher</label>
-<select id="assignTeacherDropdown" class="border rounded-lg p-2 w-full">
-                        <option value="">Select Teacher</option>
-                    </select>
-                </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Select Teacher</label>
+                <select id="assignTeacherDropdown" class="border rounded-lg p-2 w-full">
+                    <option value="">Select Teacher</option>
+                </select>
+            </div>
 
             <!-- Action Buttons -->
             <div class="flex justify-between mt-6">
                 <button onclick="closeModal()" class="bg-gray-500 text-white px-4 py-2 rounded-md">Cancel</button>
-                <button onclick="confirmAssignment()" class="bg-green-500 text-white px-4 py-2 rounded-md">Confirm</button>
+                <button onclick="confirmAssignment()"
+                    class="bg-green-500 text-white px-4 py-2 rounded-md">Confirm</button>
             </div>
         </div>
     </div>
@@ -560,7 +579,6 @@ function parseErrorMessage(error) {
         .search-active .table-container {
             max-width: 80%;
         }
-
     </style>
     <script>
         let graders = [];
@@ -585,11 +603,11 @@ function parseErrorMessage(error) {
                 API_BASE_URL = await getApiBaseUrl();
                 const response = await fetch(`${API_BASE_URL}api/Admin/grades`);
                 const data = await response.json();
-                console.log('graders info' +data)
+                console.log('graders info' + data)
                 if (data.Grader) {
                     console.log(data)
                     graders = data.Grader;
- console.log(data)
+                    console.log(data)
                     filteredGraders = [...graders];
                     renderGraders();
                 }
@@ -635,40 +653,38 @@ function parseErrorMessage(error) {
             searchGraders();
         }
 
+        function renderGraders() {
+            const tableBody = document.getElementById("grader-table-body");
+            const mobileContainer = document.getElementById("grader-mobile-container");
 
-function renderGraders() {
-    const tableBody = document.getElementById("grader-table-body");
-    const mobileContainer = document.getElementById("grader-mobile-container");
+            // Clear both containers
+            tableBody.innerHTML = "";
+            mobileContainer.innerHTML = "";
 
-    // Clear both containers
-    tableBody.innerHTML = "";
-    mobileContainer.innerHTML = "";
+            if (filteredGraders.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-500">No graders found.</td></tr>';
+                mobileContainer.innerHTML = '<div class="text-center py-4 text-gray-500">No graders found.</div>';
+                return;
+            }
 
-    if (filteredGraders.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-500">No graders found.</td></tr>';
-        mobileContainer.innerHTML = '<div class="text-center py-4 text-gray-500">No graders found.</div>';
-        return;
-    }
+            filteredGraders.forEach(grader => {
+                const studentDetailsUrl = `{{ route('grader.details') }}?student_id=${grader.student_id}`;
 
-  // In renderGraders() function:
-filteredGraders.forEach(grader => {
-      const studentDetailsUrl = `{{ route('grader.details') }}?student_id=${grader.student_id}`;
+                console.log(`History URL for ${grader.student_id}:`, studentDetailsUrl);
 
+                // Base action buttons - History is always shown
+                let actionButton = `<a href="${studentDetailsUrl}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded mr-2">History</a>`;
 
-    console.log(`History URL for ${grader.student_id}:`, studentDetailsUrl);
+                // Show Remove button only if grader is active
+                if (grader.status.toLowerCase() === "active") {
+                    actionButton += `<button onclick="confirmRemoveGrader(${grader.grader_id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">Remove</button>`;
+                }
+                // If the grader is inactive, show Assign button
+                else {
+                    actionButton += `<button onclick="assignGrader(${grader.grader_id}, '${grader.name}', '${grader.regNo}', '${grader.image}')" class="bg-green-500 text-white px-3 py-1 rounded">Assign</button>`;
+                }
 
-
-
-    let actionButton = `<a href="${studentDetailsUrl}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded mr-2">History</a>`;
-
-    // If the grader is inactive, add the Assign button too
-    if (grader.status.toLowerCase() !== "active") {
-        actionButton += `<button onclick="assignGrader(${grader.grader_id}, '${grader.name}', '${grader.regNo}', '${grader.image}')" class="bg-green-500 text-white px-3 py-1 rounded">Assign</button>`;
-    }
-
-
-
-        tableBody.innerHTML += `
+                tableBody.innerHTML += `
             <tr class="border-b border-gray-300 text-center hover:bg-gray-50">
                 <td class="px-4 py-2">${grader.name}</td>
                 <td class="px-4 py-2">${grader.status}</td>
@@ -678,8 +694,8 @@ filteredGraders.forEach(grader => {
                 </td>
             </tr>`;
 
-        // Add card to mobile container
-        mobileContainer.innerHTML += `
+                // Add card to mobile container
+                mobileContainer.innerHTML += `
             <div class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden">
                 <div class="bg-blue-500 text-white px-4 py-2 font-medium text-center">
                     ${grader.name}
@@ -696,108 +712,142 @@ filteredGraders.forEach(grader => {
                         <span class="text-gray-800">${grader["Grader of Teacher in Current Session"]}</span>
                     </div>
                     <div class="px-4 py-3 flex flex-col space-y-2">
-                        <div class="w-full">
+                        <div class="w-full flex gap-2">
+                            <a href="${studentDetailsUrl}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded block text-center flex-1">History</a>
                             ${grader.status.toLowerCase() === "active" ?
-                              `<a href="${studentDetailsUrl}" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded block text-center">History</a>` :
-                              `<button onclick="assignGrader(${grader.grader_id}, '${grader.name}','${grader.regNo}','${grader.image}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded block text-center w-full">Assign</button>`
-                            }
+                        `<button onclick="confirmRemoveGrader(${grader.grader_id})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded block text-center flex-1">Remove</button>`
+                        : ''}
                         </div>
+                        ${grader.status.toLowerCase() !== "active" ?
+                        `<button onclick="assignGrader(${grader.grader_id}, '${grader.name}','${grader.regNo}','${grader.image}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded block text-center w-full">Assign</button>`
+                        : ''}
                     </div>
                 </div>
             </div>`;
-    });
-}
-
-
-async function confirmAssignment() {
-    try {
-        let API_BASE_URL = await getApiBaseUrl();
-        let graderId = document.getElementById("graderId").value;
-        let teacherId = document.getElementById("assignTeacherDropdown").value; // Changed ID here
-
-        if (!teacherId) {
-            alert("Please select a teacher.");
-            return;
-        }
-
-        let requestData = {
-            teacher_id: teacherId,
-            grader_id: graderId
-        };
-
-        let response = await fetch(`${API_BASE_URL}api/Datacells/assign-grader`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(requestData)
-        });
-
-        let data = await response.json();
-
-        if (data.status === "success") {
-            alert(`Success: ${data.message}\nGrader ID: ${data.grader_id}\nTeacher ID: ${data.teacher_id}\nSession ID: ${data.session_id}`);
-            await loadGraders();
-            closeModal();
-        } else if (data.status === "error") {
-            alert(`Error: ${data.message}\nGrader ID: ${data.grader_id}\nSession ID: ${data.session_id}`);
-        } else {
-            alert("Unexpected response from server");
-            console.error(data);
-        }
-    } catch (error) {
-        alert("An unexpected error occurred: " + error.message);
-        console.error(error);
-    }
-}
-
-   async function assignGrader(graderId, name, regNo, imageUrl = null) {
-    document.getElementById("graderName").innerText = name;
-    document.getElementById("graderRegNo").innerText = "RegNo: " + regNo;
-    document.getElementById("graderId").value = graderId;
-
-    let imageElement = document.getElementById("graderImage");
-    let defaultAvatar = document.getElementById("defaultAvatar");
-
-    if (imageUrl) {
-        imageElement.src = imageUrl;
-        imageElement.classList.remove("hidden");
-        defaultAvatar.classList.add("hidden");
-    } else {
-        imageElement.classList.add("hidden");
-        defaultAvatar.classList.remove("hidden");
-    }
-
-    try {
-        API_BASE_URL = await getApiBaseUrl();
-        let response = await fetch(`${API_BASE_URL}api/Dropdown/get-teachers`);
-        let data = await response.json();
-
-        let teacherDropdown = document.getElementById("assignTeacherDropdown"); // Changed ID here
-        teacherDropdown.innerHTML = `<option value="">Select Teacher</option>`;
-
-        if (data && data.length > 0) {
-            data.forEach(teacher => {
-                let option = document.createElement("option");
-                option.value = teacher.id;
-                option.textContent = teacher.name;
-                teacherDropdown.appendChild(option);
             });
-        } else {
-            teacherDropdown.innerHTML = `<option value="">No Teachers Available</option>`;
         }
-    } catch (error) {
-        console.error("Error fetching teachers:", error);
-        alert("Failed to load teachers. Please try again.");
-    }
+        async function confirmRemoveGrader(graderId) {
+            if (confirm("Are you sure you want to remove this student as grader?")) {
+                await removeGrader(graderId);
+            }
+        }
 
-    document.getElementById("assignModal").classList.remove("hidden");
-}
+        async function removeGrader(graderId) {
+            try {
+                API_BASE_URL = await getApiBaseUrl();
+                const response = await fetch(`${API_BASE_URL}api/Datacells/remove-grader`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ grader_id: graderId })
+                });
+
+                const data = await response.json();
+
+                if (data.status === "success") {
+                    alert(`Success: ${data.message}`);
+                    await loadGraders();
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            } catch (error) {
+                console.error("Error removing grader:", error);
+                alert("An error occurred while removing the grader.");
+            }
+        }
+
+        async function confirmAssignment() {
+            try {
+                let API_BASE_URL = await getApiBaseUrl();
+                let graderId = document.getElementById("graderId").value;
+                let teacherId = document.getElementById("assignTeacherDropdown").value;
+
+                if (!teacherId) {
+                    alert("Please select a teacher.");
+                    return;
+                }
+
+                let requestData = {
+                    teacher_id: teacherId,
+                    grader_id: graderId
+                };
+
+                let response = await fetch(`${API_BASE_URL}api/Datacells/assign-grader`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                let data = await response.json();
+
+                if (data.status === "success") {
+                    alert(`Success: ${data.message}\nGrader ID: ${data.grader_id}\nTeacher ID: ${data.teacher_id}\nSession ID: ${data.session_id}`);
+                    await loadGraders();
+                    closeModal();
+                } else if (data.status === "error") {
+                    alert(`Error: ${data.message}\nGrader ID: ${data.grader_id}\nSession ID: ${data.session_id}`);
+                } else {
+                    alert("Unexpected response from server");
+                    console.error(data);
+                }
+            } catch (error) {
+                alert("An unexpected error occurred: " + error.message);
+                console.error(error);
+            }
+        }
+
+        async function assignGrader(graderId, name, regNo, imageUrl = null) {
+            document.getElementById("graderName").innerText = name;
+            document.getElementById("graderRegNo").innerText = "RegNo: " + regNo;
+            document.getElementById("graderId").value = graderId;
+
+            let imageElement = document.getElementById("graderImage");
+            let defaultAvatar = document.getElementById("defaultAvatar");
+
+            if (imageUrl) {
+                imageElement.src = imageUrl;
+                imageElement.classList.remove("hidden");
+                defaultAvatar.classList.add("hidden");
+            } else {
+                imageElement.classList.add("hidden");
+                defaultAvatar.classList.remove("hidden");
+            }
+
+            try {
+                API_BASE_URL = await getApiBaseUrl();
+                let response = await fetch(`${API_BASE_URL}api/Dropdown/get-teachers`);
+                let data = await response.json();
+
+                let teacherDropdown = document.getElementById("assignTeacherDropdown");
+                teacherDropdown.innerHTML = `<option value="">Select Teacher</option>`;
+
+                if (data && data.length > 0) {
+                    data.forEach(teacher => {
+                        let option = document.createElement("option");
+                        option.value = teacher.id;
+                        option.textContent = teacher.name;
+                        teacherDropdown.appendChild(option);
+                    });
+                } else {
+                    teacherDropdown.innerHTML = `<option value="">No Teachers Available</option>`;
+                }
+            } catch (error) {
+                console.error("Error fetching teachers:", error);
+                alert("Failed to load teachers. Please try again.");
+            }
+
+            document.getElementById("assignModal").classList.remove("hidden");
+        }
+
         function closeModal() {
             document.getElementById("assignModal").classList.add("hidden");
         }
 
         document.addEventListener("DOMContentLoaded", loadGraders);
+
         async function openAddGraderForm() {
             document.getElementById("addGraderForm").classList.remove("hidden");
             await populateDropdowns();
@@ -832,97 +882,76 @@ async function confirmAssignment() {
                     sessionDropdown.innerHTML += `<option value="${student.id}">${student.name}</option>`;
                 });
 
-
             } catch (error) {
                 alert("Failed to fetch dropdown data: " + error.message);
             }
         }
+
         async function addGrader() {
-    try {
-        let API_BASE_URL = await getApiBaseUrl();
-        let teacherId = document.getElementById("teacherDropdown").value;
-        let studentId = document.getElementById("studentDropdown").value;
-        let sessionId = document.getElementById("sessionDropdown").value;
-        let type = document.getElementById("typeDropdown").value;
+            try {
+                let API_BASE_URL = await getApiBaseUrl();
+                let teacherId = document.getElementById("teacherDropdown").value;
+                let studentId = document.getElementById("studentDropdown").value;
+                let sessionId = document.getElementById("sessionDropdown").value;
+                let type = document.getElementById("typeDropdown").value;
 
-        // Validation
-        if (!teacherId || !studentId || !sessionId) {
-            alert("Please fill in all required fields.");
-            return;
+                // Validation
+                if (!teacherId || !studentId || !sessionId) {
+                    alert("Please fill in all required fields.");
+                    return;
+                }
+
+                let requestData = {
+                    teacher_id: teacherId,
+                    grader_id: studentId,
+                    session_id: sessionId,
+                    type: type || null
+                };
+
+                let response = await fetch(`${API_BASE_URL}api/Datacells/add-grader`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(requestData)
+                });
+
+                let data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Failed to add grader');
+                }
+
+                if (data.status === "success") {
+                    alert(`Success: ${data.message || 'Grader added successfully!'}`);
+                    resetAddGraderForm();
+                    document.getElementById("addGraderForm").classList.add("hidden");
+                    await loadGraders();
+                } else {
+                    throw new Error(data.message || parseErrorMessage(data.error));
+                }
+            } catch (error) {
+                console.error('Add Grader Error:', error);
+                alert(`Error: ${error.message}`);
+            }
         }
-
-        let requestData = {
-            teacher_id: teacherId,
-            grader_id: studentId,
-            session_id: sessionId,
-            type: type || null
-        };
-
-        let response = await fetch(`${API_BASE_URL}api/Datacells/add-grader`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(requestData)
-        });
-
-        let data = await response.json();
-
-        if (!response.ok) {
-            throw new Error(data.message || 'Failed to add grader');
-        }
-
-        if (data.status === "success") {
-            alert(`Success: ${data.message || 'Grader added successfully!'}`);
-            resetAddGraderForm();
-            document.getElementById("addGraderForm").classList.add("hidden");
-            await loadGraders();
-        } else {
-            throw new Error(data.message || parseErrorMessage(data.error));
-        }
-    } catch (error) {
-        console.error('Add Grader Error:', error);
-        alert(`Error: ${error.message}`);
-    }
-}
-
-function parseErrorMessage(error) {
-    if (!error) return "Unknown error occurred";
-
-    if (typeof error === 'string') return error;
-
-    if (Array.isArray(error)) {
-        return error.join('\n');
-    }
-
-    if (typeof error === 'object') {
-        return Object.entries(error)
-            .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
-            .join('\n');
-    }
-
-    return "Unexpected error format";
-}
 
         function parseErrorMessage(error) {
-            if (typeof error === 'string') {
-                return error; // Return as-is if it's already plain text
-            } else if (typeof error === 'object' && error !== null) {
-                if (Array.isArray(error)) {
-                    return error.join(', '); // Convert array errors to comma-separated text
-                } else {
-                    let messages = [];
-                    for (const key in error) {
-                        if (Array.isArray(error[key])) {
-                            messages.push(`${key}: ${error[key].join(', ')}`);
-                        } else {
-                            messages.push(`${key}: ${error[key]}`);
-                        }
-                    }
-                    return messages.join('\n'); // Return as multi-line text
-                }
+            if (!error) return "Unknown error occurred";
+
+            if (typeof error === 'string') return error;
+
+            if (Array.isArray(error)) {
+                return error.join('\n');
             }
-            return "An unexpected error occurred."; // Default fallback
+
+            if (typeof error === 'object') {
+                return Object.entries(error)
+                    .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
+                    .join('\n');
+            }
+
+            return "Unexpected error format";
         }
 
         function resetAddGraderForm() {
@@ -947,13 +976,15 @@ function parseErrorMessage(error) {
                 <!-- Search by Grader Name -->
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Grader Name</label>
-                    <input type="text" id="search-name" class="border rounded-lg p-2 w-full" oninput="searchGraders()" placeholder="Enter grader name">
+                    <input type="text" id="search-name" class="border rounded-lg p-2 w-full" oninput="searchGraders()"
+                        placeholder="Enter grader name">
                 </div>
 
                 <!-- Search by Teacher Name -->
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Teacher Name</label>
-                    <input type="text" id="search-teacher" class="border rounded-lg p-2 w-full" oninput="searchGraders()" placeholder="Enter teacher name">
+                    <input type="text" id="search-teacher" class="border rounded-lg p-2 w-full"
+                        oninput="searchGraders()" placeholder="Enter teacher name">
                 </div>
 
                 <!-- Type Filter -->
@@ -965,7 +996,8 @@ function parseErrorMessage(error) {
                             <span class="text-sm text-gray-700">Merit-based</span>
                         </label>
                         <label class="flex items-center space-x-2">
-                            <input type="radio" name="type-filter" value="need-based" onclick="handleTypeFilter(this.value)">
+                            <input type="radio" name="type-filter" value="need-based"
+                                onclick="handleTypeFilter(this.value)">
                             <span class="text-sm text-gray-700">Need-based</span>
                         </label>
                     </div>
@@ -974,7 +1006,8 @@ function parseErrorMessage(error) {
                 <!-- Status Filter -->
                 <div>
                     <label class="block text-sm font-medium text-gray-600 mb-1">Status</label>
-                    <select id="status-filter" class="border rounded-lg p-2 w-full" onchange="handleStatusFilter(this.value)">
+                    <select id="status-filter" class="border rounded-lg p-2 w-full"
+                        onchange="handleStatusFilter(this.value)">
                         <option value="">Select Status</option>
                         <option value="active">Active</option>
                         <option value="in-active">Inactive</option>
@@ -985,14 +1018,16 @@ function parseErrorMessage(error) {
                 <button onclick="resetSearch()" class="bg-gray-600 hover:bg-gray-700 text-white px-5 py-2 rounded-lg">
                     Reset Filters
                 </button>
-                <div class="btn">    <button onclick="openAddGraderForm()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">
-                    Add Grader
-                </button>
-                 <a href="{{ route('show.grader') }}" class="bg-green-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg inline-block">
-    Upload Excel
-</a>
+                <div class="btn"> <button onclick="openAddGraderForm()"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg">
+                        Add Grader
+                    </button>
+                    <a href="{{ route('show.grader') }}"
+                        class="bg-green-600 hover:bg-blue-700 text-white px-5 py-2 rounded-lg inline-block">
+                        Upload Excel
+                    </a>
 
-            </div>
+                </div>
 
             </div>
         </div>
@@ -1083,17 +1118,18 @@ function parseErrorMessage(error) {
                 <input type="hidden" id="graderId">
             </div>
 
-           <div>
-                    <label class="block text-sm font-medium text-gray-600 mb-1">Select Teacher</label>
-<select id="assignTeacherDropdown" class="border rounded-lg p-2 w-full">
-                        <option value="">Select Teacher</option>
-                    </select>
-                </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-600 mb-1">Select Teacher</label>
+                <select id="assignTeacherDropdown" class="border rounded-lg p-2 w-full">
+                    <option value="">Select Teacher</option>
+                </select>
+            </div>
 
             <!-- Action Buttons -->
             <div class="flex justify-between mt-6">
                 <button onclick="closeModal()" class="bg-gray-500 text-white px-4 py-2 rounded-md">Cancel</button>
-                <button onclick="confirmAssignment()" class="bg-green-500 text-white px-4 py-2 rounded-md">Confirm</button>
+                <button onclick="confirmAssignment()"
+                    class="bg-green-500 text-white px-4 py-2 rounded-md">Confirm</button>
             </div>
         </div>
     </div>

@@ -9,20 +9,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* Base styles */
         .table-container {
             transition: all 0.3s ease-in-out;
         }
-
-        /* Search container responsiveness */
         .search-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             gap: 0.5rem;
         }
-
-        /* Pagination styling */
         .pagination-container {
             display: flex;
             justify-content: center;
@@ -51,7 +46,6 @@
             cursor: not-allowed;
         }
 
-        /* Modal styling */
         .modal {
             display: none;
             position: fixed;
@@ -417,7 +411,7 @@
                     </div>
                     <div class="form-group md:col-span-2">
                         <label for="edit-image">Profile Image</label>
-                        <input type="file" id="edit-image" name="image" accept="image/jpeg,image/png">
+                        <input type="file" id="edit-image" name="image" accept="image/jpeg,image/png,image/jpg">
                     </div>
                 </div>
                 <div class="form-actions">

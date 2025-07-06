@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Director Dashboard | LMS</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Core styling with enhanced visual elements */
         body {
@@ -308,6 +307,13 @@
                 grid-template-columns: 1fr;
             }
         }
+        
+        /* SVG icon styling */
+        .svg-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
     </style>
 </head>
 <body class="bg-gray-50 font-sans antialiased">
@@ -351,7 +357,9 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon bg-blue-500">
-                        <i class="fas fa-chalkboard-teacher"></i>
+                        <svg class="svg-icon" viewBox="0 0 24 24">
+                            <path d="M12 3L1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+                        </svg>
                     </div>
                     <div class="stat-content">
                         <div class="stat-number">{{ session('faculty_count', '42') }}</div>
@@ -361,7 +369,10 @@
 
                 <div class="stat-card">
                     <div class="stat-icon bg-purple-500">
-                        <i class="fas fa-user-graduate"></i>
+                        <svg class="svg-icon" viewBox="0 0 24 24">
+                            <path d="M12 3L1 9l11 6 9-4.91V17h2V9M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+                            <path d="M18 12l-5-3v6l5-3z"/>
+                        </svg>
                     </div>
                     <div class="stat-content">
                         <div class="stat-number">{{ session('student_count', '834') }}</div>
@@ -371,7 +382,9 @@
 
                 <div class="stat-card">
                     <div class="stat-icon bg-green-500">
-                        <i class="fas fa-book"></i>
+                        <svg class="svg-icon" viewBox="0 0 24 24">
+                            <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                        </svg>
                     </div>
                     <div class="stat-content">
                         <div class="stat-number">{{ session('course_count', '28') }}</div>
@@ -381,7 +394,9 @@
 
                 <div class="stat-card">
                     <div class="stat-icon bg-yellow-500">
-                        <i class="fas fa-clipboard-check"></i>
+                        <svg class="svg-icon" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM17.99 9l-1.41-1.42-6.59 6.59-2.58-2.57-1.42 1.41 4 3.99z"/>
+                        </svg>
                     </div>
                     <div class="stat-content">
                         <div class="stat-number">{{ session('offer_count', '156') }}</div>
@@ -399,52 +414,85 @@
                 <!-- Timetable Card -->
                 <a href="{{ route('timetable.view') }}" class="action-card">
                     <div class="card-icon" style="--icon-color-1: var(--icon-blue-1); --icon-color-2: var(--icon-blue-2);">
-                        <i class="fas fa-calendar-alt"></i>
+                        <svg class="svg-icon" viewBox="0 0 24 24">
+                            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/>
+                        </svg>
                     </div>
                     <h3 class="card-name">View Timetable</h3>
                     <p class="card-description">Complete institutional schedule</p>
                     <div class="mt-3 text-blue-500 text-sm font-medium flex items-center justify-center">
                         <span>View Now</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
+                        <svg class="svg-icon ml-2" style="width: 14px; height: 14px;" viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
                     </div>
                 </a>
 
                 <!-- Students Card -->
                 <a href="{{ route('Director.student') }}" class="action-card">
                     <div class="card-icon" style="--icon-color-1: var(--icon-green-1); --icon-color-2: var(--icon-green-2);">
-                        <i class="fas fa-users"></i>
+                        <svg class="svg-icon" viewBox="0 0 24 24">
+                            <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                        </svg>
                     </div>
                     <h3 class="card-name">View Students</h3>
                     <p class="card-description">Browse all registered students</p>
                     <div class="mt-3 text-green-500 text-sm font-medium flex items-center justify-center">
                         <span>View Students</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
+                        <svg class="svg-icon ml-2" style="width: 14px; height: 14px;" viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
                     </div>
                 </a>
 
                 <!-- Faculty Card -->
                 <a href="{{ route('Director.teachers') }}" class="action-card">
                     <div class="card-icon" style="--icon-color-1: var(--icon-indigo-1); --icon-color-2: var(--icon-indigo-2);">
-                        <i class="fas fa-chalkboard-teacher"></i>
+                        <svg class="svg-icon" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
                     </div>
                     <h3 class="card-name">View Faculty</h3>
                     <p class="card-description">Manage teaching staff</p>
                     <div class="mt-3 text-indigo-500 text-sm font-medium flex items-center justify-center">
                         <span>View Faculty</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
+                        <svg class="svg-icon ml-2" style="width: 14px; height: 14px;" viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
                     </div>
                 </a>
 
                 <!-- Excluded Days Card -->
                 <a href="{{ route('Director.excludedDays') }}" class="action-card">
                     <div class="card-icon" style="--icon-color-1: var(--icon-orange-1); --icon-color-2: var(--icon-orange-2);">
-                        <i class="fas fa-calendar-times"></i>
+                        <svg class="svg-icon" viewBox="0 0 24 24">
+                            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/>
+                            <path d="M17 13h-5v5h5v-5z" fill="white"/>
+                        </svg>
                     </div>
                     <h3 class="card-name">Excluded Days</h3>
                     <p class="card-description">Set holidays and special days</p>
                     <div class="mt-3 text-orange-500 text-sm font-medium flex items-center justify-center">
                         <span>Manage Now</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
+                        <svg class="svg-icon ml-2" style="width: 14px; height: 14px;" viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </a>
+                
+                <a href="{{ route('Director.auditdirector') }}" class="action-card">
+                    <div class="card-icon" style="--icon-color-1: var(--icon-orange-1); --icon-color-2: var(--icon-orange-2);">
+                        <svg class="svg-icon" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                        </svg>
+                    </div>
+                    <h3 class="card-name">Audit Report</h3>
+                    <p class="card-description">See All Courses Audit Report</p>
+                    <div class="mt-3 text-orange-500 text-sm font-medium flex items-center justify-center">
+                        <span>Manage Now</span>
+                        <svg class="svg-icon ml-2" style="width: 14px; height: 14px;" viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
                     </div>
                 </a>
             </div>
@@ -458,52 +506,85 @@
                 <!-- Academic Sessions -->
                 <a href="{{ route('Director.session') }}" class="action-card">
                     <div class="card-icon" style="--icon-color-1: var(--icon-teal-1); --icon-color-2: var(--icon-teal-2);">
-                        <i class="fas fa-calendar-week"></i>
+                        <svg class="svg-icon" viewBox="0 0 24 24">
+                            <path d="M17 10H7v2h10v-2zm2-7h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
+                        </svg>
                     </div>
                     <h3 class="card-name">Academic Sessions</h3>
                     <p class="card-description">Manage terms and semesters</p>
                     <div class="mt-3 text-teal-500 text-sm font-medium flex items-center justify-center">
                         <span>View Sessions</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
+                        <svg class="svg-icon ml-2" style="width: 14px; height: 14px;" viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
                     </div>
                 </a>
 
                 <!-- Course Content -->
                 <a href="{{ route('Director.course_content') }}" class="action-card">
                     <div class="card-icon" style="--icon-color-1: var(--icon-amber-1); --icon-color-2: var(--icon-amber-2);">
-                        <i class="fas fa-book-open"></i>
+                        <svg class="svg-icon" viewBox="0 0 24 24">
+                            <path d="M3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2zm12 4c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z"/>
+                        </svg>
                     </div>
                     <h3 class="card-name">Course Content</h3>
                     <p class="card-description">Review course materials</p>
                     <div class="mt-3 text-amber-500 text-sm font-medium flex items-center justify-center">
                         <span>View Content</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
+                        <svg class="svg-icon ml-2" style="width: 14px; height: 14px;" viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
                     </div>
                 </a>
 
                 <!-- Courses -->
                 <a href="{{ route('Director.course') }}" class="action-card">
                     <div class="card-icon" style="--icon-color-1: var(--icon-red-1); --icon-color-2: var(--icon-red-2);">
-                        <i class="fas fa-book"></i>
+                        <svg class="svg-icon" viewBox="0 0 24 24">
+                            <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+                        </svg>
                     </div>
                     <h3 class="card-name">Courses</h3>
                     <p class="card-description">Browse course catalog</p>
                     <div class="mt-3 text-red-500 text-sm font-medium flex items-center justify-center">
                         <span>View Courses</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
+                        <svg class="svg-icon ml-2" style="width: 14px; height: 14px;" viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
                     </div>
                 </a>
 
                 <!-- Course Allocations -->
                 <a href="{{ route('Director.course_allocation') }}" class="action-card">
                     <div class="card-icon" style="--icon-color-1: #ec4899; --icon-color-2: #db2777;">
-                        <i class="fas fa-tasks"></i>
+                        <svg class="svg-icon" viewBox="0 0 24 24">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+                            <path d="M19 7l-1.41-1.41L9 16.17 4.83 12l-1.42 1.41L9 19 21 7z"/>
+                        </svg>
                     </div>
                     <h3 class="card-name">Course Allocations</h3>
                     <p class="card-description">Manage assignments</p>
                     <div class="mt-3 text-pink-500 text-sm font-medium flex items-center justify-center">
                         <span>View Allocations</span>
-                        <i class="fas fa-arrow-right ml-2"></i>
+                        <svg class="svg-icon ml-2" style="width: 14px; height: 14px;" viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </div>
+                </a>
+                
+                <a href="{{ route('Director.examdirector') }}" class="action-card">
+                    <div class="card-icon" style="--icon-color-1: var(--icon-orange-1); --icon-color-2: var(--icon-orange-2);">
+                        <svg class="svg-icon" viewBox="0 0 24 24">
+                            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM12 7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm-1 3.5h-1v-1h1v1zm1.5 0h-1v-1h1v1zm1.5 0h-1v-1h1v1z"/>
+                        </svg>
+                    </div>
+                    <h3 class="card-name">Exam Details</h3>
+                    <p class="card-description">See All Section Exam Details</p>
+                    <div class="mt-3 text-orange-500 text-sm font-medium flex items-center justify-center">
+                        <span>View Now</span>
+                        <svg class="svg-icon ml-2" style="width: 14px; height: 14px;" viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
                     </div>
                 </a>
             </div>

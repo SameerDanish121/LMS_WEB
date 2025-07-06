@@ -275,6 +275,8 @@ Route::prefix('admin')->group(function () {
         $role = base64_decode($roleEncoded);
         return view('admin.teacher_profile', compact('teacher', 'role'));
     })->name('teacher.details');
+    Route::view('/date_sheet/view', 'admin.date_sheet.view')->name('date_sheet');
+    Route::view('/date_sheet/add', 'admin.date_sheet.add')->name('datacell.upload.datesheet');
 
 });
 //`````````````````````````````````DIRECTOR ( Ali )`````````````````````//
@@ -331,8 +333,15 @@ Route::prefix('director')->group(function () {
     Route::get('/excludeddays', function () {
         return view('DIRECTOR.ExcludedDays');
     })->name('Director.excludedDays');
-
+    Route::get('/AuditReport', function () {
+        return view('DIRECTOR.Adut_Director');
+    })->name('Director.auditdirector');
+    Route::get('/ExamDetail', function () {
+        return view('DIRECTOR.Exam_Director');
+    })->name('Director.examdirector');
 });
+
+
 
 
 
@@ -364,7 +373,7 @@ Route::get('/clear-session', function () {
     return response()->json(['status' => 'success', 'message' => 'Session cleared successfully.']);
 })->name('clear.session');
 Route::get('/', function () {
-     Session::flush();
+    //  Session::flush();
     return view('AUTHENTICATION.login');
 })->name('login');
 Route::post('/login', [AuthController::class, 'handleLogin'])->name('handleLogin');
@@ -381,7 +390,7 @@ Route::get('/verify-otp-show', function () {
 })->name('otp.form');
 Route::post('/verify-otp-ver', [AuthController::class, 'verifyOTP'])->name('verify.otp');
 Route::get('/datacell/dashboard', function () {
-     if (session('userType') !== 'Datacell') {
+    if (session('userType') !== 'Datacell') {
         return redirect()->route('caught.it');
     }
     $userData = session('userData');
@@ -390,7 +399,7 @@ Route::get('/datacell/dashboard', function () {
     }return view('DATACELL.datacell_dashboard', compact('userData'));
 })->name('datacell.dashboard');
 Route::get('/admin/dashboard', function () {
-     if (session('userType') !== 'Admin') {
+    if (session('userType') !== 'Admin') {
         return redirect()->route('caught.it');
     }
     $userData = session('userData');
@@ -399,13 +408,13 @@ Route::get('/admin/dashboard', function () {
     }return view('admin.Admin_Home', compact('userData'));
 })->name('admin.dashboard');
 Route::get('/hod/dashboard', function () {
-      if (session('userType') !== 'HOD') {
+    if (session('userType') !== 'HOD') {
         return redirect()->route('caught.it');
     }
     return view('HOD.hod_dashboard');
 })->name('hod.dashboard');
 Route::get('/director/dashboard', function () {
-      if (session('userType') !== 'Director') {
+    if (session('userType') !== 'Director') {
         return redirect()->route('caught.it');
     }
     return view('DIRECTOR.director_dashboard');

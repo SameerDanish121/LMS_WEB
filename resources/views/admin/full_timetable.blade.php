@@ -1,4 +1,6 @@
-
+<?php
+$sections = array_keys($timetable);
+?>
 <!DOCTYPE html>
 <html lang="en">
 

@@ -479,11 +479,11 @@
                                     <span class="icon">📈</span>
                                     <span class="text">Promote Students</span>
                                 </a>
-                                <a href="{{ route('Datacell.temp.enroll') }}" class="action-btn"
+                                {{-- <a href="{{ route('Datacell.temp.enroll') }}" class="action-btn"
                                     onclick="logFunction('Approve Enrollments');">
                                     <span class="icon">✅</span>
                                     <span class="text">Approve Temporary Enrollments</span>
-                                </a>
+                                </a> --}}
 
                                 <a href="{{ route('re_enroll.request') }}" class="action-btn"
                                     onclick="logFunction('Approve Improvements');">

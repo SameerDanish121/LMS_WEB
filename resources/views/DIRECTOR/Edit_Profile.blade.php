@@ -441,18 +441,14 @@ $directorId = session('Id', '');
                     if (imageInput.files.length > 0) {
                         formData.append("image", imageInput.files[0]);
                     }
-                    
                     const response = await fetch(`${API_BASE_URL}api/Insertion/director/update/${directorId}`, {
                         method: "POST",
                         body: formData
-                    });
-                    
-                    const result = await response.json();
-                    
+                    }); 
+                    const result = await response.json(); 
                     if (!response.ok) {
                         throw new Error(result.message || 'Failed to update profile');
-                    }
-                    
+                    }  
                     // Update session data in frontend
                     if (result.director) {
                         if (result.director.image) {
