@@ -7,7 +7,6 @@
     <title>Teacher List</title>
     @vite('resources/css/app.css')
     <style>
-        /* Base styles */
         .table-container {
             transition: all 0.3s ease-in-out;
         }
@@ -30,8 +29,6 @@
             background-color: #f59e0b;
             color: white;
         }
-
-        /* Top action buttons */
         .top-actions {
             display: flex;
             justify-content: flex-end;
