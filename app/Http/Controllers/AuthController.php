@@ -103,8 +103,9 @@ class AuthController extends Controller
                     'student_count' => $data['DirectorInfo']['student_count'],
                     'faculty_count' => $data['DirectorInfo']['faculty_count'],
                     'offer_count' => $data['DirectorInfo']['offered_course_count'],
-
+                    'sameer'=>'sameer'
                 ]);
+                
                 return redirect()->route('otp.form');
             } else {
                 return redirect()->route('caught.it');
@@ -165,9 +166,7 @@ class AuthController extends Controller
         }
 
         return abort(404, 'Transcript not found'); 
-    }
-
-  
+    }  
 
     public function AllCourse(Request $request)
     {
